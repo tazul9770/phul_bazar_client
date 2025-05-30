@@ -1,3 +1,5 @@
+import { Link } from "react-router";
+
 const Navbar = () => {
   return (
     <div className="navbar bg-white shadow-md px-4">
@@ -19,13 +21,13 @@ const Navbar = () => {
           <ul className="menu menu-sm dropdown-content mt-3 z-10 p-2 shadow rounded-box w-52 bg-white">
             <li><a>Home</a></li>
             <li>
-              <a>Shop</a>
+              <a>Parent</a>
               <ul className="p-2">
                 <li><a>Submenu 1</a></li>
                 <li><a>Submenu 2</a></li>
               </ul>
             </li>
-            <li><a>Contact</a></li>
+            <li><Link to="/shop">Shop</Link></li>
           </ul>
         </div>
         <a className="btn btn-ghost text-xl font-semibold text-black">🌸 Phul_Bazar</a>
@@ -37,14 +39,14 @@ const Navbar = () => {
           <li><a>Home</a></li>
           <li>
             <details>
-              <summary>Shop</summary>
+              <summary>Parent</summary>
               <ul className="p-2 bg-white rounded-box shadow">
                 <li><a>Submenu 1</a></li>
                 <li><a>Submenu 2</a></li>
               </ul>
             </details>
           </li>
-          <li><a>Contact</a></li>
+          <li><Link to="/shop">Shop</Link></li>
         </ul>
       </div>
 
