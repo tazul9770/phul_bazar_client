@@ -1,22 +1,29 @@
-import { useEffect, useState } from "react";
-import apiClient from "../../services/api-client";
 import FlowerList from "./FlowerList";
+import Pagination from "./Pagination";
+import useFetchProduct from "../../hooks/useFetchProducts";
+import { useState } from "react";
+import FilterSection from "./FilterSection";
 
 const ShopPage = () => {
-    const [products, setProducts] = useState([])
-    const [loading, setLoading] = useState(false)
+    const [currentPage, setCurrentPage] = useState(1)
+    const [priceRange, setPriceRange] = useState([0, 1000])
+    const {products, loading, totalPage} = useFetchProduct(currentPage)
 
-    useEffect(() => {
-        setLoading(true)
-        apiClient.get("/flowers")
-        .then((res) => setProducts(res.data.results))
-        .catch((err) => console.log(err))
-        .finally(() => setLoading(false))
-    }, [])
+    const handlePriceChange = (index, value) => {
+    setPriceRange((prev) => {
+      const newRange = [...prev];
+      newRange[index] = value;
+      return newRange;
+    });
+    setCurrentPage(1);
+  };
 
     return (
-        <div>
+        <div className="max-w-7xl mx-auto px-4 py-10">
+            <h1 className="text-2xl font-bold mb-4">Shop Our Products</h1>
+            <FilterSection priceRange={priceRange} handlePriceChange={handlePriceChange}/>
             <FlowerList products={products} loading={loading}/>
+            <Pagination totalPage={totalPage} currentPage={currentPage} handlePageChange={setCurrentPage}/>
         </div>
     );
 };

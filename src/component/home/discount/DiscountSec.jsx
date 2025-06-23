@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import img from "../../assets/image/pic-Photoroom.png";
+import img from "../../../assets/image/pic-Photoroom.png";
 
 const DiscountSec = () => {
   const calculateTimeLeft = () => {
-    const targetDate = new Date("2025-06-10T00:00:00").getTime();
+    const targetDate = new Date("2025-07-10T00:00:00").getTime();
     const now = Date.now();
     const diff = targetDate - now;
 

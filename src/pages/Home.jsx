@@ -1,5 +1,5 @@
-import Category from '../component/categories/Category';
-import DiscountSec from '../component/discount/DiscountSec';
+import Category from '../component/home/categories/Category';
+import DiscountSec from '../component/home/discount/DiscountSec';
 import Products from '../component/flower/Flowers';
 import Features from '../features/Features';
 import PromoSection from '../features/PromoSection';
