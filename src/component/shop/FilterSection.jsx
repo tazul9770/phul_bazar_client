@@ -1,7 +1,7 @@
-const FilterSection = ({priceRange, handlePriceChange}) => {
+const FilterSection = ({priceRange, handlePriceChange, categories, selectedCategory, handleCategoryChange, searchQuery, handleSearchQuery, sortOrder, handleSorting}) => {
   return (
     <div className="mb-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      {/* Price Range */}
+      {/* Price Range ***/}
       <div className="bg-white p-5 rounded-2xl shadow-md border border-gray-100">
         <label className="block text-sm font-semibold text-gray-800 mb-3">
           Price Range
@@ -63,8 +63,13 @@ const FilterSection = ({priceRange, handlePriceChange}) => {
         </label>
         <select
           className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          value={selectedCategory}
+          onChange={(e) => handleCategoryChange(e.target.value)}
         >
           <option value="">All Categories</option>
+          {categories.map(category => (
+            <option key={category.id} value={category.id}>{category.name}</option>
+          ))}
         </select>
       </div>
 
@@ -75,6 +80,8 @@ const FilterSection = ({priceRange, handlePriceChange}) => {
         </label>
         <input
           type="text"
+          value={searchQuery}
+          onChange={(e) => handleSearchQuery(e.target.value)}
           placeholder="Search flowers..."
           className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
@@ -87,6 +94,7 @@ const FilterSection = ({priceRange, handlePriceChange}) => {
         </label>
         <select
           className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          value={sortOrder} onChange={(e)=> handleSorting(e.target.value)}
         >
           <option value="">Default</option>
           <option value="price">Price: Low to High</option>
@@ -96,5 +104,4 @@ const FilterSection = ({priceRange, handlePriceChange}) => {
     </div>
   );
 };
-
 export default FilterSection;
