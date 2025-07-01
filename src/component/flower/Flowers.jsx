@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import ProductItem from './FlowerItems';
 import ErrorAlert from '../../ErrorAlert';
+import ProductItem from './FlowerItems';
 import apiClient from '../../services/api-client';
 
 const Products = () => {

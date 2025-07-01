@@ -11,7 +11,8 @@ const Login = () => {
     formState: { errors },
   } = useForm();
 
-  const navigate = useNavigate();
+  const navigate = useNavigate()
+
   const {errorMsg, loginUser } = useAuthContext();
   const [loading, setLoading] = useState(false);
 
@@ -19,7 +20,7 @@ const Login = () => {
     setLoading(true)
     try {
       await loginUser(data);
-      navigate("/dashboard");
+      setTimeout(() => navigate("/"), 3000)
     } catch (error) {
       console.log("Login error", error);
     } finally {

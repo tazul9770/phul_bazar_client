@@ -5,6 +5,7 @@ const useAuth = () => {
 
     const [user, setUser] = useState(null);
     const [errorMsg, setErrorMsg] = useState("");
+    const [successMsg, setSuccessMsg] = useState("")
 
     const getToken = () => {
         const token = localStorage.getItem("authTokens");
@@ -17,6 +18,21 @@ const useAuth = () => {
         if (authToken) fetchUserProfile()
     }, [authToken])
 
+    const handleAPIError = (error, defaultMsg = "Something went wrong!") => {
+      if (error.response && error.response.data) {
+        const errorMessage = Object.values(error.response.data)
+          .flat()
+          .join("\n");
+        setErrorMsg(errorMessage);
+        return { success: false, message: errorMessage };
+      }
+      setErrorMsg(defaultMsg);
+      return {
+        success: false,
+        message: defaultMsg
+      };
+    }
+
     //Fetch user profile
     const fetchUserProfile = async () => {
         try{
@@ -27,6 +43,30 @@ const useAuth = () => {
         }catch(error) {
             console.log("Error fetching user", error);
         }
+    }
+
+    //Update User profile
+    const updateUserProfile = async(data) => {
+      setErrorMsg("")
+      setSuccessMsg("")
+      try{
+        await apiClient.put("/auth/users/me", data, {headers : {Authorization : `JWT ${authToken?.access}`}})
+        setSuccessMsg("Profile updated successfully")
+      }catch(error) {
+        return handleAPIError(error)
+      }
+    }
+
+    // Change password
+    const changePassword = async(data) => {
+      setErrorMsg("")
+      setSuccessMsg("")
+      try{
+        await apiClient.post("/auth/users/set_password/", data, {headers : {Authorization : `JWT ${authToken?.access}`}})
+        setSuccessMsg("Password changed successfully.")
+      }catch(error) {
+        return handleAPIError(error)
+      }
     }
 
     // Login user
@@ -54,18 +94,7 @@ const useAuth = () => {
           "Registration successfull. Check your email to activate your account.",
       };
     } catch (error) {
-      if (error.response && error.response.data) {
-        const errorMessage = Object.values(error.response.data)
-          .flat()
-          .join("\n");
-        setErrorMsg(errorMessage);
-        return { success: false, message: errorMessage };
-      }
-      setErrorMsg("Registratation failed. Please try again");
-      return {
-        success: false,
-        message: "Registratation failed. Please try again",
-      };
+      return handleAPIError(error, "Registration failed. Try again!")
     }
   };
 
@@ -76,7 +105,7 @@ const useAuth = () => {
         localStorage.removeItem("authTokens")
     };
 
-    return {user, errorMsg, loginUser, registerUser, logoutUser}
+    return {user, errorMsg,successMsg ,loginUser, registerUser, logoutUser, updateUserProfile, changePassword}
 
 }
 export default useAuth;
