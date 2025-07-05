@@ -1,8 +1,10 @@
 import { Link } from "react-router";
 import useAuthContext from "../hooks/useAuthContext";
+import useCartContext from "../hooks/useCartContext";
 
 const Navbar = () => {
   const { user, logoutUser } = useAuthContext();
+  const {cart} = useCartContext()
   return (
     <div className="navbar bg-white shadow-md px-4">
       {/* Left: Logo and Mobile Menu */}
@@ -43,7 +45,7 @@ const Navbar = () => {
             )}
           </ul>
         </div>
-        <a className="btn btn-ghost text-xl font-semibold text-black">🌸 Phul_Bazar</a>
+        <a className="btn btn-ghost text-xl font-semibold text-black">Phul_Bazar</a>
       </div>
 
       {/* Center: Desktop Menu */}
@@ -85,14 +87,16 @@ const Navbar = () => {
                       d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
                     />
                   </svg>
-                  <span className="badge badge-sm badge-primary indicator-item">8</span>
+                  <span className="badge badge-sm badge-primary indicator-item">{cart?.items?.length || 0}</span>
                 </div>
               </div>
               <div className="dropdown-content mt-3 z-10 w-64 p-4 bg-white rounded-box shadow">
-                <span className="font-semibold text-lg">8 Items</span>
-                <span className="text-sm text-gray-500">Subtotal: $999</span>
+                <span className="font-semibold text-lg">{cart?.items?.length || 0} Items</span>
+                <span className="text-sm text-gray-500"> ${cart?.total_price || 0}</span>
                 <div className="mt-2">
-                  <button className="btn btn-primary w-full">View Cart</button>
+                  <Link to="dashboard/cart/">
+                    <button className="btn btn-primary w-full">View Cart</button>
+                  </Link>
                 </div>
               </div>
             </div>

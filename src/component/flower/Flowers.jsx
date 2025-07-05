@@ -2,49 +2,61 @@ import React, { useEffect, useState } from 'react';
 import ErrorAlert from '../../ErrorAlert';
 import ProductItem from './FlowerItems';
 import apiClient from '../../services/api-client';
+import { Link } from 'react-router-dom'; // fixed: should be react-router-dom
 
 const Products = () => {
   const [products, setProducts] = useState([]);
-  const [isLoading, setLoading] = useState(false)
-  const [error, setError] = useState("")
+  const [isLoading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    setLoading(true)
+    setLoading(true);
     apiClient
       .get('/flowers/')
       .then((res) => setProducts(res.data.results))
       .catch((err) => setError(err.message))
-      .finally(() => setLoading(false))
+      .finally(() => setLoading(false));
   }, []);
 
   return (
-    <div className="p-4 m-14">
-      {/* Header section */}
-      <div className="flex flex-col sm:flex-row items-center justify-between mb-6 gap-3">
-        <h2 className="text-2xl font-bold text-gray-800">Trending Products</h2>
-        <button className="btn btn-outline btn-sm sm:btn-md text-primary font-medium hover:bg-primary hover:text-white transition">
-          View All
-        </button>
+    <div>
+      <div className="px-4 sm:px-6 lg:px-10 py-10">
+      {/* Header Section */}
+      <div className="flex items-center justify-between flex-wrap sm:flex-nowrap mb-8 gap-4">
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800">
+          Trending Products
+        </h2>
+        <Link to="/shop">
+          <button className="btn btn-outline btn-sm sm:btn-md text-primary font-medium hover:bg-primary hover:text-white transition duration-200">
+            View All
+          </button>
+        </Link>
       </div>
-      {/* spinner */}
+
+      {/* Loading Spinner */}
       {isLoading && (
-        <div className='flex justify-center items-center py-7'>
+        <div className="flex justify-center items-center py-7">
           <span className="loading loading-spinner loading-xl text-primary"></span>
         </div>
       )}
-      {/* Eroor message */}
-      {error && <ErrorAlert error={error}/>}
-      {/* Product show */}
+
+      {/* Error Message */}
+      {error && <ErrorAlert error={error} />}
+
+      {/* Product Grid */}
       {!isLoading && !error && products.length > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 justify-items-center">
-        {products.map((product) => (
-          <ProductItem key={product.id} product={product} />
-        ))}
-      </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+          {products.map((product) => (
+            <ProductItem key={product.id} product={product} />
+          ))}
+        </div>
       )}
+
+      {/* No Products */}
       {!isLoading && !error && products.length === 0 && (
-        <p className='text-center text-gray-500 mt-5'>No Products Available</p>
+        <p className="text-center text-gray-500 mt-5">No Products Available</p>
       )}
+    </div>
     </div>
   );
 };
