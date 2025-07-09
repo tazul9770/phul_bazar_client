@@ -1,17 +1,31 @@
 import { FiBarChart2, FiPackage, FiPlusCircle, FiShoppingCart, FiStar, FiTag, FiUsers } from "react-icons/fi";
+import { MdBorderColor } from "react-icons/md";
 import { Link } from "react-router";
+import useAuthContext from "../../hooks/useAuthContext";
 
 const Sidebar = () => {
-  const items = [
+  const {user} = useAuthContext()
+  const customerItems = [
+    { to: "/dashboard", icon: FiBarChart2, label: "Dashboard" },
+    { to: "/dashboard/cart", icon: FiShoppingCart, label: "Carts" },
+    { to: "/dashboard/orders", icon: MdBorderColor, label: "Orders" },
+    { to: "/reviews", icon: FiStar, label: "Reviews" },
+  ];
+
+  const adminItems = [
     { to: "/dashboard", icon: FiBarChart2, label: "Dashboard" },
     { to: "/products", icon: FiPackage, label: "Products" },
     { to: "/products/add", icon: FiPlusCircle, label: "Add Product" },
     { to: "/categories", icon: FiTag, label: "Categories" },
     { to: "/categories/add", icon: FiPlusCircle, label: "Add Category" },
-    { to: "/orders", icon: FiShoppingCart, label: "Orders" },
+    { to: "/dashboard/cart", icon: FiShoppingCart, label: "Carts" },
+    { to: "/dashboard/orders", icon: MdBorderColor, label: "Orders" },
     { to: "/reviews", icon: FiStar, label: "Reviews" },
     { to: "/users", icon: FiUsers, label: "Users" },
   ];
+
+    const items = user.is_staff ? adminItems : customerItems;
+    
     return (
         <div className="drawer-side z-10">
         <label
@@ -23,7 +37,9 @@ const Sidebar = () => {
           {/* Sidebar header */}
           <div className="flex items-center gap-2 mb-6 px-2">
             <FiShoppingCart className="h-6 w-6" />
-            <h1 className="text-xl font-bold">Phul_Bazar</h1>
+            <Link to="/">
+              <h1 className="text-xl font-bold">Phul_Bazar</h1>
+            </Link>
           </div>
 
           {/* Sidebar menu */}

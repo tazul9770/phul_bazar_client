@@ -2,11 +2,11 @@ import { useCallback, useEffect, useState } from "react";
 import authApiClient from "../services/auth_apiClient";
 
 const useCart = () => {
-    const [authToken] = useState(
-        () => JSON.parse(localStorage.getItem("authTokens")).access
-     );
+    // const [authToken] = useState(
+    //     () => JSON.parse(localStorage.getItem("authTokens"))?.access
+    //  );
      const [cart, setCart] = useState(null);
-     const [cartId, setCartId] = useState(() => localStorage.getItem("cartId"));
+     const [cartId, setCartId] = useState("");
      const [loading, setLoading] = useState(false)
 
     // Create cart
@@ -24,9 +24,9 @@ const useCart = () => {
         }finally{
             setLoading(false)
         }
-    }, [cartId, authToken])
+    }, [cartId])
 
-    // addCartItems
+    //addCartItems
     const addCartItems = useCallback(async (flower_id, quantity) => {
         setLoading(true)
     let currentCartId = cartId;
@@ -43,7 +43,7 @@ const useCart = () => {
     try {
         const response = await authApiClient.post(
             `/carts/${currentCartId}/items/`,
-            { flower_id, quantity },
+            { flower_id, quantity }
         );
         console.log("add", response.data);
         return response.data;
@@ -54,11 +54,13 @@ const useCart = () => {
     }
 }, [cartId, createOrGetCart])
 
+
     // Cart item quantity update
 
     const updateCartItemQuantity = useCallback(async(itemId, quantity) =>{
         try{
             await authApiClient.patch(`carts/${cartId}/items/${itemId}/`, {quantity})
+            console.log("update");
         } catch(error) {
             console.log("Error updating cart items", error);
         }
@@ -67,7 +69,8 @@ const useCart = () => {
     // delete cart items
     const deleteCartItems = useCallback(async(itemId) => {
         try{
-            await authApiClient.delete(`/carts/${cartId}/items/${itemId}/`)
+            await authApiClient.delete(`/carts/${cartId}/items/${itemId}/`);
+            console.log("delete");
         }catch(error) {
             console.log(error);
         }
@@ -82,7 +85,7 @@ const useCart = () => {
     initializeCart();
   }, [createOrGetCart]);
 
-    return {cart, loading, createOrGetCart, addCartItems, updateCartItemQuantity, deleteCartItems}
+    return {cart, loading, cartId, createOrGetCart, addCartItems, updateCartItemQuantity, deleteCartItems}
 };
 
 export default useCart;

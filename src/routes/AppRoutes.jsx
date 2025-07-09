@@ -14,6 +14,7 @@ import RequestResetForm from "../component/password_reset/RequestResetForm";
 import ResetPasswordPage from "../component/password_reset/ResetPasswordPage";
 import ProductDetail from "../pages/ProductDetail";
 import Cart from "../pages/Cart";
+import Orders from "../pages/Orders";
 
 const AppRoutes = () => {
     return (
@@ -40,6 +41,7 @@ const AppRoutes = () => {
                     <Route path="profile" element={<Profile/>}/>
                     <Route path="profile/forgot_password" element={<RequestResetForm/>}/>
                     <Route path="cart" element={<Cart/>}/>
+                    <Route path="orders" element={<Orders/>}/>
                 </Route>
 
             </Routes>

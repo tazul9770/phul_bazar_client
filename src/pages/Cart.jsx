@@ -7,6 +7,7 @@ const Cart = () => {
   const {
     cart,
     loading,
+    cartId,
     createOrGetCart,
     updateCartItemQuantity,
     deleteCartItems,
@@ -76,7 +77,7 @@ const Cart = () => {
   };
 
   // Loading / empty cart fallback
-  if (loading) return <p></p>;
+  if (loading) return <p className='text-xl font-bold text-center text-black'>Loading...</p>;
   if (!localCart) return <p>No Cart Found</p>;
 
   return (
@@ -95,6 +96,7 @@ const Cart = () => {
           <CartSummary
             totalPrice={localCart.total_price}
             itemCount={localCart.items.length}
+            cartId={cartId}
           />
         </div>
       </div>

@@ -1,7 +1,30 @@
-const CartSummary = ({ totalPrice, itemCount }) => {
+import authApiClient from "../../services/auth_apiClient";
+
+const CartSummary = ({ totalPrice, itemCount, cartId}) => {
   const shipping = itemCount === 0 || parseFloat(totalPrice) < 100 ? 0 : 15;
   const tax = parseFloat(totalPrice) * 0.1;
   const orderTotal = parseFloat(totalPrice) + shipping + tax;
+ 
+  const deleteCart = () => {
+    localStorage.removeItem("cartId")
+  }
+
+  const createOrder = async () => {
+  try {
+    console.log("any order");
+    console.log(cartId);
+    const order = await authApiClient.post("/orders/", {
+      cart_id: cartId,
+    });
+    if(order.status === 201) {
+      deleteCart()
+      alert("Order created successfully")
+    }
+    console.log(order);
+  } catch (error) {
+    console.log("Cart summary error", error);
+  }
+};
 
   return (
     <div className="card bg-base-100 shadow-2xl rounded-2xl">
@@ -35,7 +58,7 @@ const CartSummary = ({ totalPrice, itemCount }) => {
         </div>
 
         <div className="card-actions mt-6">
-          <button className="btn btn-primary w-full text-base tracking-wide">
+          <button disabled={itemCount === 0} onClick={() => createOrder()} className="btn btn-primary w-full text-base tracking-wide">
             Proceed
           </button>
         </div>
