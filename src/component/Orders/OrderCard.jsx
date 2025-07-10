@@ -8,6 +8,7 @@ import authApiClient from "../../services/auth_apiClient";
 const OrderCard = ({ order, onCancel }) => {
   const {user} = useAuthContext();
   const [status, setStatus] = useState(order.status);
+  const [loading, setLoading] = useState(false);
 
   const handleStatusChange = async(event) => {
     const newStatus = event.target.value;
@@ -19,6 +20,21 @@ const OrderCard = ({ order, onCancel }) => {
         alert(response.data.status)
       }
     }catch(error) {
+      console.log(error);
+    }
+  }
+
+  const handlePayment = async() => {
+    setLoading(true)
+    try{
+      const response = await authApiClient.post('/payment/initiate/', {amount:order.total_price, orderId:order.id, itemsNum:order.items?.length})
+      if(response.data.payment_url){
+        setLoading(false)
+        window.location.href = response.data.payment_url
+      }else{
+        alert("Payment failed")
+      }
+    }catch(error){
       console.log(error);
     }
   }
@@ -86,9 +102,9 @@ const OrderCard = ({ order, onCancel }) => {
           </div>
         </div>
         {!user.is_staff && order.status === "Not Paid" && (
-          <button className="mt-4 sm:mt-0 w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-all shadow-sm">
-            <MdOutlinePayment className="text-xl" />
-            Pay Now
+          <button className="mt-4 sm:mt-0 w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-all shadow-sm" onClick={handlePayment} disabled={loading}>
+            <MdOutlinePayment className="text-xl"/>
+            {loading ? "Processing..." : "Pay Now"}
           </button>
         )}
       </div>

@@ -11,8 +11,6 @@ const CartSummary = ({ totalPrice, itemCount, cartId}) => {
 
   const createOrder = async () => {
   try {
-    console.log("any order");
-    console.log(cartId);
     const order = await authApiClient.post("/orders/", {
       cart_id: cartId,
     });
