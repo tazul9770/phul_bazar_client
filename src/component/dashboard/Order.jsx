@@ -8,7 +8,6 @@ const Order = () => {
      authApiClient.get("/orders/")
      .then((res) => {
         setOrderItems(res.data) 
-        console.log(res.data);
       })
   }, [])
 

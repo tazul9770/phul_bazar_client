@@ -110,10 +110,13 @@ const Navbar = () => {
               </div>
               <ul className="menu menu-sm dropdown-content mt-3 z-10 p-2 shadow bg-white rounded-box w-52">
                 <li>
-                  <a className="justify-between">
+                  <Link to="/dashboard/profile" className="justify-between">
                     Profile
                     <span className="badge badge-info">New</span>
-                  </a>
+                  </Link>
+                  <Link to="/dashboard">
+                    Dashboard
+                  </Link>
                 </li>
                 <li><a>Settings</a></li>
                 <li><button onClick={logoutUser}>Logout</button></li>
