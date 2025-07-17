@@ -12,9 +12,9 @@ const Category = () => {
     <section className="py-12 px-4 max-w-7xl mx-auto">
       {/* Category Heading  */}
       <div className="flex justify-between items-center mb-8">
-        <h2 className="text-3xl font-bold">Browse Categories</h2>
+        <h2 className="text-xl font-bold">Browse Categories</h2>
         <a
-          href="#"
+          href="/dashboard/categories/"
           className="btn hover:bg-primary hover:text-white transition px-6 py-6 rounded-full text-lg"
         >
           View All

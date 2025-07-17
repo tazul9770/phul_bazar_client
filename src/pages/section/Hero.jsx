@@ -3,9 +3,11 @@ import Image from "../../assets/image/women-free-png.webp";
 import Img1 from "../../assets/avatar/1.jpg"
 import Img3 from "../../assets/avatar/3.jpg"
 import Img2 from "../../assets/avatar/4.jpg"
+import { useNavigate } from "react-router";
 
 const HeroSection = () => {
   const avatars = [Img1,Img2,Img3];
+  const navigate = useNavigate();
 
   return (
     <section className="flex flex-col-reverse md:flex-row items-center justify-between px-6 md:px-16 py-16 bg-white">
@@ -20,10 +22,11 @@ const HeroSection = () => {
 
         {/* Buttons */}
         <div className="mt-6 flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4">
-          <button className="cursor-pointer bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-full text-lg shadow-md transition-all duration-300">
-            Shop Now
-          </button>
-          <a href="#" className="text-purple-600 hover:underline text-lg font-medium">
+          {/* here shop now button when I click it render shop page */}
+            <button onClick={() => navigate("/shop")} className="cursor-pointer bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-full text-lg shadow-md transition-all duration-300">
+              Shop Now
+            </button>
+          <a href="/shop" className="text-purple-600 hover:underline text-lg font-medium">
             View All Products
           </a>
         </div>

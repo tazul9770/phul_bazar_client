@@ -1,36 +1,53 @@
-import { FaAngleRight } from "react-icons/fa6";
+import { FaRegArrowAltCircleRight } from "react-icons/fa";
+import useAuthContext from "../../../hooks/useAuthContext";
 
-const CategoryItems = ({ index, category }) => {
-  const gradients = [
-    "from-pink-100 to-blue-100",
-    "from-blue-100 to-purple-100",
-    "from-purple-100 to-pink-100",
-    "from-pink-100 to-blue-100",
+const CategoryItems = ({ index, category}) => {
+  const { user } = useAuthContext(); // Assuming user contains is_staff
+  const cardColors = [
+    "bg-gradient-to-r from-pink-200 to-pink-100",
+    "bg-gradient-to-r from-blue-200 to-blue-100",
+    "bg-gradient-to-r from-yellow-200 to-yellow-100",
+    "bg-gradient-to-r from-green-200 to-green-100",
   ];
 
   return (
     <div
-      className={`rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 cursor-pointer bg-gradient-to-br ${
-        gradients[index % gradients.length]
+      className={`rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 p-5 flex flex-col items-start justify-between h-64 w-56 ${
+        cardColors[index % cardColors.length]
       }`}
     >
-      <div className="p-6 flex flex-col h-full">
-        <div className="flex justify-between items-start mb-4">
-          <div className="h-10 w-10 rounded-full bg-pink-500 text-white flex items-center justify-center font-bold text-xl">
-            {category.name.charAt(0)}
-          </div>
-          <span className="text-sm text-gray-600 bg-white/70 px-2 py-1 rounded-full">
-            {category.flower_count} Items
-          </span>
+      {/* Header */}
+      <div className="flex items-center w-full mb-4">
+        <div className="h-10 w-10 rounded-full bg-pink-500 text-white flex items-center justify-center text-lg font-bold shadow-md">
+          {category.name?.charAt(0)}
         </div>
-        <h3 className="text-xl font-bold mb-2">{category.name}</h3>
-        <p className="text-gray-600 text-sm mb-4 flex-grow">
-          {category.description}
-        </p>
-        <button className="text-pink-500 font-bold hover:text-pink-600 transition-colors flex items-center">
-          Explore
-          <FaAngleRight />
+        <span className="ml-auto text-xs bg-white text-gray-700 px-2 py-0.5 rounded-full shadow-sm">
+          {category.flower_count} Items
+        </span>
+      </div>
+
+      {/* Name */}
+      <h3 className="text-lg font-bold text-gray-800 mb-2 truncate w-full">
+        {category.name}
+      </h3>
+
+      {/* Description */}
+      <p className="text-gray-700 text-sm mb-4 line-clamp-2">
+        {category.description || "Check out our exclusive flowers collection!"}
+      </p>
+
+      {/* Actions */}
+      <div className="flex items-center justify-between w-full">
+        <button className="flex items-center gap-2 text-pink-600 text-sm font-semibold hover:translate-x-1 transition-transform">
+          Discover <FaRegArrowAltCircleRight />
         </button>
+        {user?.is_staff && (
+          <button
+            className="text-red-500 text-xs font-medium hover:underline ml-2"
+          >
+            Delete
+          </button>
+        )}
       </div>
     </div>
   );

@@ -17,6 +17,8 @@ import Cart from "../pages/Cart";
 import Orders from "../pages/Orders";
 import PaymentSuccess from "../pages/PaymentSuccess";
 import AddProducts from "../pages/AddProducts";
+import ShowCategory from "../component/dashboard/ShowCategory";
+import AddCategoryForm from "../component/home/categories/AddCategoryForm";
 
 const AppRoutes = () => {
     return (
@@ -46,6 +48,8 @@ const AppRoutes = () => {
                     <Route path="orders" element={<Orders/>}/>
                     <Route path="payment/success" element={<PaymentSuccess/>}/>
                     <Route path="products/add" element={<AddProducts/>}/>
+                    <Route path="categories" element={<ShowCategory/>}/>
+                    <Route path="categories/add" element={<AddCategoryForm/>}/>
                 </Route>
 
             </Routes>

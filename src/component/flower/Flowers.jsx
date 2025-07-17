@@ -20,7 +20,7 @@ const Products = () => {
 
   return (
     <div>
-      <div className="px-4 sm:px-6 lg:px-10 py-10">
+      <div className="px-4 sm:px-6 lg:px-10 py-10 m-14">
       {/* Header Section */}
       <div className="flex items-center justify-between flex-wrap sm:flex-nowrap mb-8 gap-4">
         <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800">

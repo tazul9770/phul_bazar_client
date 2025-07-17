@@ -31,16 +31,27 @@ const Navbar = () => {
             <li><a>Home</a></li>
             <li>
               <a>Parent</a>
-              <ul className="p-2">
-                <li><a>Submenu 1</a></li>
-                <li><a>Submenu 2</a></li>
-              </ul>
             </li>
             <li><Link to="/shop">Shop</Link></li>
             {!user && (
               <>
-                <li><Link to="/login">Login</Link></li>
-                <li><Link to="/register">Register</Link></li>
+                <li>
+                    <Link
+                        to="/login"
+                        className="block px-4 py-2 text-gray-700 hover:bg-blue-100 rounded-md transition"
+                    >
+                      Login
+                  </Link>
+                </li>
+                <li>
+                <Link
+                    to="/register"
+                    className="block px-4 py-2 text-gray-700 hover:bg-green-100 rounded-md transition"
+                >
+                  Register
+                    </Link>
+                </li>
+
               </>
             )}
           </ul>
@@ -129,8 +140,8 @@ const Navbar = () => {
 
             {/* Desktop Login/Register */}
             <div className="hidden lg:flex gap-3">
-              <Link to="/login" className="text-md text-white px-3 py-2 bg-blue-500 rounded-md">Login</Link>
-              <Link to="/register" className="text-md text-white px-3 py-2 bg-blue-500 rounded-md">Register</Link>
+                <Link to="/login" className="btn btn-sm btn-primary">Login</Link>
+                <Link to="/register" className="btn btn-sm btn-outline-primary border-primary text-primary hover:bg-primary hover:text-white">Register</Link>
             </div>
           </>
         )}
