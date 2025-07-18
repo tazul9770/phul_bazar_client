@@ -2,12 +2,15 @@ import React, { useEffect, useState } from 'react';
 import ErrorAlert from '../../ErrorAlert';
 import ProductItem from './FlowerItems';
 import apiClient from '../../services/api-client';
-import { Link } from 'react-router-dom'; // fixed: should be react-router-dom
+import { Link } from 'react-router-dom';
+import useAuthContext from '../../hooks/useAuthContext';
 
 const Products = () => {
   const [products, setProducts] = useState([]);
   const [isLoading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const {user} = useAuthContext();
 
   useEffect(() => {
     setLoading(true);
@@ -24,12 +27,14 @@ const Products = () => {
       {/* Header Section */}
       <div className="flex items-center justify-between flex-wrap sm:flex-nowrap mb-8 gap-4">
         <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800">
-          Trending Products
+          Trending Flowers
         </h2>
         <Link to="/shop">
-          <button className="btn btn-outline btn-sm sm:btn-md text-primary font-medium hover:bg-primary hover:text-white transition duration-200">
-            View All
-          </button>
+          {user && (
+            <button className="btn btn-outline btn-sm sm:btn-md text-primary font-medium hover:bg-primary hover:text-white transition duration-200">
+              View All
+            </button>
+          )}
         </Link>
       </div>
 

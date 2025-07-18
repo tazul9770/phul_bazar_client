@@ -11,7 +11,7 @@ const ShopPage = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [sortOrder, setSortOrder] = useState("");
-  const [showFilter, setShowFilter] = useState(false); // Toggle for mobile filter
+  const [showFilter, setShowFilter] = useState(false);
 
   const { products, loading, totalPage } = useFetchProduct(
     currentPage,
@@ -20,7 +20,7 @@ const ShopPage = () => {
     searchQuery,
     sortOrder
   );
-  const categories = useFetchCategories();
+  const {categories} = useFetchCategories();
 
   const handlePriceChange = (index, value) => {
     setPriceRange((prev) => {

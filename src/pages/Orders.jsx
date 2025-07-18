@@ -4,13 +4,23 @@ import authApiClient from '../services/auth_apiClient';
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    authApiClient.get("/orders/")
-    .then((res) => {
-      setOrders(res.data)
-    })
-  }, [])
+  const fetchOrders = async () => {
+    setLoading(true);
+    try {
+      const res = await authApiClient.get("/orders/");
+      setOrders(res.data);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+  fetchOrders();
+}, []);
+
 
   const handleCancelOrder = async(orderId) => {
     try{
@@ -25,7 +35,10 @@ const Orders = () => {
   }
     return (
         <div className='container mx-auto py-8 px-4'>
-            <h1 className='text-2xl font-bold mb-6'>Order details</h1>   
+            <h1 className='text-2xl font-bold mb-6'>Order details</h1> 
+            {loading && (
+              <p className='text-center text-xl mb-4'>Loading orders...</p>
+            )}  
             {orders.map((order) => (
                 <OrderCard key={order.id} order={order} onCancel={handleCancelOrder}/>
             ))}

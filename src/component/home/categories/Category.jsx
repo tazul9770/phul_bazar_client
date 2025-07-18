@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import apiClient from "../../../services/api-client";
 import CategoryItems from "./CategoryItems";
+import useAuthContext from "../../../hooks/useAuthContext";
 
 const Category = () => {
   const [categories, setCategories] = useState([]);
+  const {user} = useAuthContext();
 
   useEffect(() => {
     apiClient.get("/category/").then((res) => setCategories(res.data));
@@ -13,12 +15,14 @@ const Category = () => {
       {/* Category Heading  */}
       <div className="flex justify-between items-center mb-8">
         <h2 className="text-xl font-bold">Browse Categories</h2>
-        <a
-          href="/dashboard/categories/"
-          className="btn hover:bg-primary hover:text-white transition px-6 py-6 rounded-full text-lg"
-        >
-          View All
-        </a>
+        {user && (
+          <a
+            href="/dashboard/categories/"
+            className="btn hover:bg-primary hover:text-white transition px-6 py-6 rounded-full text-lg"
+          >
+            View All
+          </a>
+        )}
       </div>
 
       {/* Category Grid  */}

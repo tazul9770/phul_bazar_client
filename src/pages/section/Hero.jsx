@@ -1,13 +1,22 @@
-
 import Image from "../../assets/image/women-free-png.webp";
-import Img1 from "../../assets/avatar/1.jpg"
-import Img3 from "../../assets/avatar/3.jpg"
-import Img2 from "../../assets/avatar/4.jpg"
+import Img1 from "../../assets/avatar/1.jpg";
+import Img3 from "../../assets/avatar/3.jpg";
+import Img2 from "../../assets/avatar/4.jpg";
 import { useNavigate } from "react-router";
+import useAuthContext from "../../hooks/useAuthContext";
 
 const HeroSection = () => {
-  const avatars = [Img1,Img2,Img3];
+  const avatars = [Img1, Img2, Img3];
   const navigate = useNavigate();
+  const { user } = useAuthContext();
+
+  const handleShopNow = () => {
+    if (user) {
+      navigate("/shop");
+    } else {
+      navigate("/login");
+    }
+  };
 
   return (
     <section className="flex flex-col-reverse md:flex-row items-center justify-between px-6 md:px-16 py-16 bg-white">
@@ -22,18 +31,22 @@ const HeroSection = () => {
 
         {/* Buttons */}
         <div className="mt-6 flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4">
-          {/* here shop now button when I click it render shop page */}
-            <button onClick={() => navigate("/shop")} className="cursor-pointer bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-full text-lg shadow-md transition-all duration-300">
-              Shop Now
-            </button>
-          <a href="/shop" className="text-purple-600 hover:underline text-lg font-medium">
+          <button
+            onClick={handleShopNow}
+            className="cursor-pointer bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-full text-lg shadow-md transition-all duration-300"
+          >
+            Shop Now
+          </button>
+          <button
+            onClick={handleShopNow}
+            className="text-purple-600 hover:underline text-lg font-medium"
+          >
             View All Products
-          </a>
+          </button>
         </div>
 
         {/* Ratings */}
         <div className="mt-8 flex items-center justify-center md:justify-start gap-4">
-          {/* Avatar group */}
           <div className="flex -space-x-2">
             {avatars.map((src, i) => (
               <img
@@ -44,8 +57,6 @@ const HeroSection = () => {
               />
             ))}
           </div>
-
-          {/* Text */}
           <div className="text-sm text-gray-700">
             <strong className="text-base text-gray-900">4.9+ Ratings</strong>
             <br />

@@ -7,20 +7,20 @@ const Sidebar = () => {
   const {user} = useAuthContext()
   const customerItems = [
     { to: "/dashboard", icon: FiBarChart2, label: "Dashboard" },
+    { to: "/dashboard/flowers", icon: FiPackage, label: "Flowers" },
     { to: "/dashboard/cart", icon: FiShoppingCart, label: "Carts" },
     { to: "/dashboard/orders", icon: MdBorderColor, label: "Orders" },
-    { to: "/reviews", icon: FiStar, label: "Reviews" },
+    { to: "/dashboard/categories", icon: FiTag, label: "Categories" }
   ];
 
   const adminItems = [
     { to: "/dashboard", icon: FiBarChart2, label: "Dashboard" },
-    { to: "/shop", icon: FiPackage, label: "Products" },
+    { to: "/dashboard/flowers", icon: FiPackage, label: "Flowers" },
     { to: "/dashboard/products/add", icon: FiPlusCircle, label: "Add Product" },
     { to: "/dashboard/categories", icon: FiTag, label: "Categories" },
     { to: "/dashboard/categories/add", icon: FiPlusCircle, label: "Add Category" },
     { to: "/dashboard/cart", icon: FiShoppingCart, label: "Carts" },
     { to: "/dashboard/orders", icon: MdBorderColor, label: "Orders" },
-    { to: "/reviews", icon: FiStar, label: "Reviews" },
     { to: "/users", icon: FiUsers, label: "Users" },
   ];
 

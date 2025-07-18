@@ -1,17 +1,10 @@
-import { useEffect, useState } from "react";
 import CategoryItems from "../home/categories/CategoryItems";
-import apiClient from "../../services/api-client";
+import useFetchCategories from "../../hooks/useFetchCategories";
+
 
 const ShowCategory = () => {
-  const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    apiClient.get("/category/").then((res) => {
-      setCategories(res.data);
-      setLoading(false);
-    });
-  }, []);
+  const {categories, loading} = useFetchCategories();
 
   return (
     <div>

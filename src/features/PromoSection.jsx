@@ -1,5 +1,6 @@
 import Img from "../assets/image/men.jpg";
 import Img2 from "../assets/image/couple.jpg";
+import { useNavigate } from "react-router";
 
 const promos = [
   {
@@ -19,6 +20,7 @@ const promos = [
 ];
 
 const PromoSection = () => {
+  const navigate = useNavigate();
   return (
     <section className="py-20 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 grid gap-10 md:grid-cols-2">
@@ -37,7 +39,7 @@ const PromoSection = () => {
               <p className="text-gray-600 text-sm md:text-base mb-6 leading-relaxed">
                 {item.description}
               </p>
-              <button className="inline-block bg-purple-600 text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-purple-700 transition">
+              <button onClick={() => navigate("/shop")} className="inline-block bg-purple-600 text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-purple-700 transition cursor-pointer">
                 Shop Now
               </button>
             </div>

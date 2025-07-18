@@ -1,7 +1,15 @@
 import { FiMenu, FiX } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import useAuthContext from "../../hooks/useAuthContext";
 
 const Navbar = ({ sidebarOpen }) => {
+  const { logoutUser } = useAuthContext();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logoutUser();
+    navigate("/")
+  }
   const avatarUrl =
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2ci45lDsJ5gEB2_-lHyyzjvSA08XAgz52uQ&s";
 
@@ -51,7 +59,7 @@ const Navbar = ({ sidebarOpen }) => {
               <Link to="/settings">Settings</Link>
             </li>
             <li>
-              <button className="text-left w-full">Logout</button>
+              <button onClick={handleLogout} className="text-left w-full">Logout</button>
             </li>
           </ul>
         </div>
