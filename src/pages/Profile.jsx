@@ -8,7 +8,7 @@ import ErrorAlert from "../ErrorAlert";
 
 const Profile = () => {
     const [isEditing, setIsEditing] = useState(false);
-    const {user, updateUserProfile, changePassword, errorMsg, successMsg} = useAuthContext();
+    const {user, updateUserProfile, changePassword, errorMsg,successMsg} = useAuthContext();
 
     const {
         register, 
@@ -25,6 +25,7 @@ const Profile = () => {
     const onSubmit = async(data) => {
         try{
             const profilePayLoad = {
+                email:data.email,
                 first_name:data.first_name,
                 last_name:data.last_name,
                 address:data.address,

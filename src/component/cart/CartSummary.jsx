@@ -4,7 +4,8 @@ import useAuthContext from "../../hooks/useAuthContext";
 
 const CartSummary = ({ totalPrice, itemCount, cartId }) => {
   const [loading, setLoading] = useState(false);
-  const {user} = useAuthContext()
+  const [orderPlaced, setOrderPlaced] = useState(false);
+  const { user } = useAuthContext();
 
   const shipping = itemCount === 0 || parseFloat(totalPrice) < 100 ? 0 : 15;
   const tax = parseFloat(totalPrice) * 0.1;
@@ -22,9 +23,9 @@ const CartSummary = ({ totalPrice, itemCount, cartId }) => {
       });
       if (order.status === 201) {
         deleteCart();
+        setOrderPlaced(true);
         alert("Order created successfully");
       }
-      console.log(order);
     } catch (error) {
       console.log("Cart summary error", error);
     } finally {
@@ -65,19 +66,20 @@ const CartSummary = ({ totalPrice, itemCount, cartId }) => {
 
         <div className="card-actions mt-6">
           <button
-            disabled={itemCount === 0 || loading || user?.is_staff}
+            disabled={itemCount === 0 || loading || user?.is_staff || orderPlaced}
             onClick={createOrder}
             className="btn btn-primary w-full text-base tracking-wide flex justify-center items-center"
           >
-          {loading ? (
-            <span className="loading loading-spinner loading-sm"></span>
-          ) : user?.is_staff ? (
-            "Staff cannot order"
-          ) : (
-            "Proceed"
-          )}
+            {loading ? (
+              <span className="loading loading-spinner loading-sm"></span>
+            ) : user?.is_staff ? (
+              "Staff cannot order"
+            ) : orderPlaced ? (
+              "Order Placed"
+            ) : (
+              "Proceed"
+            )}
           </button>
-
         </div>
       </div>
     </div>

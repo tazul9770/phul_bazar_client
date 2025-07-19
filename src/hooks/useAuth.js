@@ -50,7 +50,7 @@ const useAuth = () => {
       setErrorMsg("")
       setSuccessMsg("")
       try{
-        await apiClient.put("/auth/users/me", data, {headers : {Authorization : `JWT ${authToken?.access}`}})
+        await apiClient.put("/auth/users/me/", data, {headers : {Authorization : `JWT ${authToken?.access}`}})
         setSuccessMsg("Profile updated successfully")
       }catch(error) {
         return handleAPIError(error)
