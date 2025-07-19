@@ -1,71 +1,71 @@
 import { FaRegArrowAltCircleRight } from "react-icons/fa";
 import useAuthContext from "../../../hooks/useAuthContext";
-import { Link, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import authApiClient from "../../../services/auth_apiClient";
 
-const CategoryItems = ({ index, category }) => {
+const CategoryItems = ({ category }) => {
   const { user } = useAuthContext();
   const location = useLocation();
-
-  const cardColors = [
-    "bg-gradient-to-r from-pink-200 to-pink-100",
-    "bg-gradient-to-r from-blue-200 to-blue-100",
-    "bg-gradient-to-r from-yellow-200 to-yellow-100",
-    "bg-gradient-to-r from-green-200 to-green-100",
-  ];
+  const navigate = useNavigate();
 
   const linkPath = location.pathname.includes("/dashboard/categories")
     ? `/dashboard/categories/shop_cate_pagi/${category.id}`
     : `/shop_cate_pagi/${category.id}`;
 
-    const handleDelete = () => {
-      try{
-        authApiClient.delete(`/category/${category.id}`)
-        alert("This category delete sucessfull")
-      }catch(err){
-        console.log(err);
-      }
+  const handleDelete = async () => {
+    try {
+      await authApiClient.delete(`/category/${category.id}`);
+      alert("Category deleted successfully");
+    } catch (err) {
+      console.error(err);
     }
+  };
 
+  const handleCategoryClick = () => {
+    if (!user) {
+      navigate("/login");
+    } else {
+      navigate(linkPath);
+    }
+  };
 
   return (
     <div
-      className={`rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 p-5 flex flex-col items-start justify-between h-64 w-56 m-8 ${
-        cardColors[index % cardColors.length]
-      }`}
+      onClick={handleCategoryClick}
+      className="cursor-pointer w-full sm:w-60 rounded-3xl bg-gray-200 border border-gray-200 shadow-lg hover:shadow-2xl hover:border-pink-400 transition-all duration-300 transform hover:-translate-y-2 hover:scale-105 m-3 p-5 flex flex-col justify-between group"
     >
-      <Link to={linkPath} className="w-full h-full flex flex-col justify-between">
+      <div className="flex flex-col justify-between flex-grow">
         <div>
-          <div className="flex items-center w-full mb-4">
-            <div className="h-10 w-10 rounded-full bg-pink-500 text-white flex items-center justify-center text-lg font-bold shadow-md">
+          <div className="flex items-center justify-between mb-4">
+            <div className="h-12 w-12 rounded-full bg-gradient-to-tr from-pink-500 to-rose-400 text-white flex items-center justify-center text-xl font-bold shadow-lg group-hover:scale-110 transition-transform">
               {category.name?.charAt(0)}
             </div>
-            <span className="ml-auto text-xs bg-white text-gray-700 px-2 py-0.5 rounded-full shadow-sm">
+            <span className="text-xs bg-pink-100 text-pink-700 px-2 py-0.5 rounded shadow-sm group-hover:shadow-md transition-all">
               {category.flower_count} Items
             </span>
           </div>
 
-          <h3 className="text-lg font-bold text-gray-800 mb-2 truncate w-full">
+          <h3 className="text-lg font-bold text-gray-900 mb-1 truncate">
             {category.name}
           </h3>
 
           <p className="text-gray-700 text-sm mb-4 line-clamp-2">
             {category.description || "Check out our exclusive flowers collection!"}
           </p>
-
-          <div className="flex items-center justify-between w-full">
-            <span className="flex items-center gap-2 text-pink-600 text-sm font-semibold hover:translate-x-1 transition-transform">
-              Discover <FaRegArrowAltCircleRight />
-            </span>
-          </div>
         </div>
-      </Link>
+
+        <div className="flex items-center gap-2 text-pink-600 text-sm font-semibold hover:translate-x-1 transition-transform">
+          Discover <FaRegArrowAltCircleRight />
+        </div>
+      </div>
 
       {user?.is_staff && (
         <button
-          type="button"
+          onClick={(e) => {
+            e.stopPropagation(); // prevent category card click
+            handleDelete();
+          }}
           className="text-red-500 text-xs font-medium hover:underline mt-2 cursor-pointer"
-          onClick={handleDelete}
         >
           Delete
         </button>

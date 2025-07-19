@@ -98,7 +98,7 @@ const OrderCard = ({ order, onCancel }) => {
           {!user.is_staff && status !== "Delivered" && status !== "Canceled" && (
             <button
               onClick={handleUserCancel}
-              className="flex items-center gap-1 text-blue-600 text-sm hover:underline"
+              className="flex items-center gap-1 text-blue-600 text-sm hover:underline cursor-pointer"
             >
               <FaTimesCircle />
               Cancel
@@ -142,7 +142,7 @@ const OrderCard = ({ order, onCancel }) => {
           <button
             onClick={handlePayment}
             disabled={loading}
-            className="mt-4 sm:mt-0 w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-all shadow-sm disabled:opacity-50"
+            className="mt-4 sm:mt-0 w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-all shadow-sm disabled:opacity-50 cursor-pointer"
           >
             <MdOutlinePayment className="text-xl" />
             {loading ? "Processing..." : "Pay Now"}
