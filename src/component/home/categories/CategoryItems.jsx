@@ -32,29 +32,27 @@ const CategoryItems = ({ category }) => {
   return (
     <div
       onClick={handleCategoryClick}
-      className="cursor-pointer w-full sm:w-60 rounded-3xl bg-gray-200 border border-gray-200 shadow-lg hover:shadow-2xl hover:border-pink-400 transition-all duration-300 transform hover:-translate-y-2 hover:scale-105 m-3 p-5 flex flex-col justify-between group"
+      className="cursor-pointer w-full max-w-xs sm:max-w-sm md:max-w-md rounded-2xl bg-white border border-gray-200 shadow-md hover:shadow-xl transition duration-300 transform hover:-translate-y-1 hover:scale-[1.03] m-3 p-5 flex flex-col justify-between group hover:border-pink-400"
     >
-      <div className="flex flex-col justify-between flex-grow">
-        <div>
-          <div className="flex items-center justify-between mb-4">
-            <div className="h-12 w-12 rounded-full bg-gradient-to-tr from-pink-500 to-rose-400 text-white flex items-center justify-center text-xl font-bold shadow-lg group-hover:scale-110 transition-transform">
-              {category.name?.charAt(0)}
-            </div>
-            <span className="text-xs bg-pink-100 text-pink-700 px-2 py-0.5 rounded shadow-sm group-hover:shadow-md transition-all">
-              {category.flower_count} Items
-            </span>
+      <div className="flex flex-col flex-grow">
+        <div className="flex items-center justify-between mb-4">
+          <div className="h-14 w-14 rounded-full bg-gradient-to-tr from-pink-500 to-rose-400 text-white flex items-center justify-center text-2xl font-bold shadow-md group-hover:scale-110 transition-transform">
+            {category.name?.charAt(0)}
           </div>
-
-          <h3 className="text-lg font-bold text-gray-900 mb-1 truncate">
-            {category.name}
-          </h3>
-
-          <p className="text-gray-700 text-sm mb-4 line-clamp-2">
-            {category.description || "Check out our exclusive flowers collection!"}
-          </p>
+          <span className="text-xs bg-pink-100 text-pink-700 px-2 py-0.5 rounded-full shadow group-hover:shadow-md transition">
+            {category.flower_count} Items
+          </span>
         </div>
 
-        <div className="flex items-center gap-2 text-pink-600 text-sm font-semibold hover:translate-x-1 transition-transform">
+        <h3 className="text-xl font-semibold text-gray-900 mb-1 truncate capitalize">
+          {category.name}
+        </h3>
+
+        <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+          {category.description || "Explore our beautiful flower collections curated for you!"}
+        </p>
+
+        <div className="flex items-center gap-2 text-pink-600 text-sm font-semibold mt-auto hover:translate-x-1 transition-transform">
           Discover <FaRegArrowAltCircleRight />
         </div>
       </div>
@@ -62,10 +60,10 @@ const CategoryItems = ({ category }) => {
       {user?.is_staff && (
         <button
           onClick={(e) => {
-            e.stopPropagation(); // prevent category card click
+            e.stopPropagation();
             handleDelete();
           }}
-          className="text-red-500 text-xs font-medium hover:underline mt-2 cursor-pointer"
+          className="text-red-500 text-xs font-medium hover:underline mt-4 transition"
         >
           Delete
         </button>
