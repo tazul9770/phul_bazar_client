@@ -35,7 +35,7 @@ const DiscountSec = () => {
               Holiday Sales
             </h2>
             <p className="text-gray-800 text-sm sm:text-base md:text-lg">
-              Enjoy <span className="font-bold text-pink-600">35% off</span> – Hurry up,
+              Enjoy <span className="font-bold text-pink-600">25% off</span> – Hurry up,
               limited time only!
             </p>
             <div className="flex flex-wrap gap-3">
@@ -79,7 +79,7 @@ const DiscountSec = () => {
               Holiday Sales
             </h2>
             <p className="text-gray-800 text-sm xs:text-base">
-              Enjoy <span className="font-bold text-pink-600">50% off</span> – Hurry up,
+              Enjoy <span className="font-bold text-pink-600">25% off</span> – Hurry up,
               limited time only!
             </p>
             <div className="flex flex-wrap gap-2">
