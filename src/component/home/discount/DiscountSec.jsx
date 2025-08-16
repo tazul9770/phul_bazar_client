@@ -3,7 +3,7 @@ import img from "../../../assets/image/pic-Photoroom.png";
 
 const DiscountSec = () => {
   const calculateTimeLeft = () => {
-    const targetDate = new Date("2025-07-31T00:00:00").getTime();
+    const targetDate = new Date("2025-09-20T00:00:00").getTime();
     const now = Date.now();
     const diff = targetDate - now;
 
