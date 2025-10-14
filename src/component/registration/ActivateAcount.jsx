@@ -9,7 +9,7 @@ const ActivateAccount = () => {
   const [loading, setLoading] = useState(true);
   const { uid, token } = useParams();
   const navigate = useNavigate();
-
+  
   useEffect(() => {
     apiClient
       .post("/auth/users/activation/", { uid, token })
