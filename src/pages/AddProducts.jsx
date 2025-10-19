@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import apiClient from "../services/api-client";
 import authApiClient from "../services/auth_apiClient";
+import { useNavigate } from "react-router";
 
 const AddProducts = () => {
   const {
