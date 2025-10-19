@@ -16,6 +16,8 @@ const AddProducts = () => {
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const navigate = useNavigate();
+
   // Fetch categories
   useEffect(() => {
     apiClient.get("/category/").then((res) => setCategories(res.data));
@@ -65,6 +67,7 @@ const AddProducts = () => {
       alert("Images uploaded successfully!");
       setPreviewImg([]);
       setImages([]);
+      navigate("/shop")
     } catch (error) {
       console.error(error);
       alert("Image upload failed.");
