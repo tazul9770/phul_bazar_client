@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import apiClient from "../services/api-client";
 import authApiClient from "../services/auth_apiClient";
+import { useNavigate } from "react-router";
 
 const AddProducts = () => {
   const {
@@ -15,6 +16,8 @@ const AddProducts = () => {
   const [previewImg, setPreviewImg] = useState([]);
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
 
   // Fetch categories
   useEffect(() => {
@@ -65,6 +68,7 @@ const AddProducts = () => {
       alert("Images uploaded successfully!");
       setPreviewImg([]);
       setImages([]);
+      navigate("/shop")
     } catch (error) {
       console.error(error);
       alert("Image upload failed.");
