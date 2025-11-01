@@ -22,7 +22,7 @@ const Sidebar = () => {
     { to: "/dashboard/cart", icon: FiShoppingCart, label: "Carts" },
     { to: "/dashboard/orders", icon: MdBorderColor, label: "Orders" },
     { to: "/dashboard/users", icon: FiUsers, label: "Users" },
-    { to: "/dashboard/contact", icon: FiBarChart2, label: "Contact" }
+    { to: "/dashboard/contact", icon: FiBarChart2, label: "Contact" },
   ];
 
     const items = user.is_staff ? adminItems : customerItems;
@@ -58,6 +58,7 @@ const Sidebar = () => {
 
           {/* Sidebar footer */}
           <div className="mt-auto pt-6 text-xs text-base-content/70">
+          
             © 2025 Phul_Bazar Admin
           </div>
         </aside>
