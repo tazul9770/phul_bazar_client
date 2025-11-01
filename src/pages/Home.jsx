@@ -4,6 +4,7 @@ import Products from '../component/flower/Flowers';
 import Features from '../features/Features';
 import PromoSection from '../features/PromoSection';
 import Hero from './section/Hero';
+import Contact from './Contact';
 
 const Home = () => {
     return (
@@ -14,6 +15,7 @@ const Home = () => {
             <Products/>
             <PromoSection/>
             <DiscountSec/>
+            <Contact/>
         </div>
     );
 };

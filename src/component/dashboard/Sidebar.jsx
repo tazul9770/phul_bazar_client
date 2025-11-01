@@ -22,6 +22,7 @@ const Sidebar = () => {
     { to: "/dashboard/cart", icon: FiShoppingCart, label: "Carts" },
     { to: "/dashboard/orders", icon: MdBorderColor, label: "Orders" },
     { to: "/dashboard/users", icon: FiUsers, label: "Users" },
+    { to: "/dashboard/contact", icon: FiBarChart2, label: "Contact" }
   ];
 
     const items = user.is_staff ? adminItems : customerItems;

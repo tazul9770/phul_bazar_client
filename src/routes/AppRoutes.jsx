@@ -22,6 +22,7 @@ import AddCategoryForm from "../component/home/categories/AddCategoryForm";
 import ShowFlower from "../component/dashboard/ShowFlower";
 import ShopByCategory from "../component/shop/ShopByCategory";
 import Users from "../pages/Users";
+import ContactList from "../component/dashboard/ContactList";
 
 const AppRoutes = () => {
     return (
@@ -57,6 +58,7 @@ const AppRoutes = () => {
                     <Route path="categories/add" element={<AddCategoryForm/>}/>
                     <Route path="flowers" element={<ShowFlower/>}/>
                     <Route path="users" element={<Users/>}/>
+                    <Route path="contact" element={<ContactList/>}/>
                 </Route>
 
             </Routes>

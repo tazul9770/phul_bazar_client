@@ -80,14 +80,12 @@ const Navbar = () => {
                 </ul>
               </div>
               <MenuLink to="/shop">Shop</MenuLink>
-              <MenuLink to="">Contact</MenuLink>
-              <MenuLink to="">About Us</MenuLink>
+              <MenuLink to="/about">About Us</MenuLink>
             </>
           ) : (
             <>
               <MenuLink to="/">Home</MenuLink>
               <MenuLink to="/about">About Us</MenuLink>
-              <MenuLink to="/contact">Contact</MenuLink>
               <MenuLink to="/shop">Shop</MenuLink>
             </>
           )}
@@ -210,15 +208,7 @@ const Navbar = () => {
               </li>
               <li>
                 <Link
-                  to=""
-                  className="block px-3 py-2 rounded hover:bg-gray-100 transition"
-                >
-                  Contact
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to=""
+                  to="/about"
                   className="block px-3 py-2 rounded hover:bg-gray-100 transition"
                 >
                   About Us
@@ -241,14 +231,6 @@ const Navbar = () => {
                   className="block px-3 py-2 rounded hover:bg-gray-100 transition"
                 >
                   About Us
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/contact"
-                  className="block px-3 py-2 rounded hover:bg-gray-100 transition"
-                >
-                  Contact
                 </Link>
               </li>
               <li>
