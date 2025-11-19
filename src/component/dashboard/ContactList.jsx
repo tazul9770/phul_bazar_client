@@ -71,7 +71,7 @@ const ContactList = () => {
                 >
                   <td className="p-4 text-gray-800 font-medium">{item.email}</td>
                   <td className="p-4 text-gray-700">{item.phone_number}</td>
-                  <td className="p-4 text-gray-700">{item.write_something}</td>
+                  <td className="p-4 text-gray-700">{item.comment}</td>
                 </tr>
               ))
             )}
