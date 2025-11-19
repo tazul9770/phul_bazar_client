@@ -244,7 +244,7 @@ const Navbar = () => {
               <li className="mt-2 flex flex-col gap-2 px-3">
                 <Link
                   to="/login"
-                  className="text-center text-primary font-semibold border-b-2 border-primary py-2 rounded hover:bg-primary hover:text-white transition"
+                  className="text-center text-white bg-primary font-semibold border-b-2 border-primary py-2 rounded hover:bg-primary hover:text-white transition"
                 >
                   Login
                 </Link>

@@ -63,7 +63,7 @@ const CategoryItems = ({ category }) => {
             e.stopPropagation();
             handleDelete();
           }}
-          className="text-red-500 text-xs font-medium hover:underline mt-4 transition"
+          className="text-red-500 text-xs font-medium hover:underline mt-4 transition cursor-pointer"
         >
           Delete
         </button>

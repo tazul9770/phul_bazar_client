@@ -2,7 +2,7 @@ import { useState } from "react";
 import Navbar from "../component/dashboard/Navbar";
 import Sidebar from "../component/dashboard/Sidebar";
 import { Outlet } from "react-router";
-import { Link } from "react-router-dom"; // ✅ FIXED IMPORT
+import { Link } from "react-router-dom"; 
 
 const DashboardLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);

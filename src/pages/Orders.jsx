@@ -11,7 +11,7 @@ const Orders = () => {
     setLoading(true);
     try {
       const res = await authApiClient.get("/orders/");
-      setOrders(res.data);
+      setOrders(res.data.results);
     } catch (err) {
       console.log(err);
     } finally {

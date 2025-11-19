@@ -63,7 +63,7 @@ const Contact = () => {
             <label className="block text-sm font-medium text-gray-700 mb-1">Message</label>
             <textarea
               rows={5}
-              {...register("write_something", { required: "Message is required" })}
+              {...register("comment", { required: "Message is required" })}
               placeholder="Write your message here..."
               className={`w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-400 ${errors.write_something ? 'border-red-500' : 'border-gray-300'}`}
             />
