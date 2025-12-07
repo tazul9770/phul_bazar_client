@@ -32,7 +32,7 @@ const CategoryItems = ({ category }) => {
   return (
     <div
       onClick={handleCategoryClick}
-      className="cursor-pointer w-full max-w-xs sm:max-w-sm md:max-w-md rounded-2xl bg-white border border-gray-200 shadow-md hover:shadow-xl transition duration-300 transform hover:-translate-y-1 hover:scale-[1.03] m-3 p-5 flex flex-col justify-between group hover:border-pink-400"
+      className="cursor-pointer w-full max-w-xs sm:max-w-sm md:max-w-md rounded-2xl bg-gray-100 border border-gray-200 shadow-md hover:shadow-xl transition duration-300 transform hover:-translate-y-1 hover:scale-[1.03] m-3 p-5 flex flex-col justify-between group hover:border-pink-400"
     >
       <div className="flex flex-col flex-grow">
         <div className="flex items-center justify-between mb-4">
