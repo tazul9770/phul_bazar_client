@@ -1,63 +1,100 @@
-import {
-  FiPackage,
-  FiShoppingCart,
-  FiStar,
-  FiUsers,
-  FiTag
-} from "react-icons/fi";
-import Card from "../component/dashboard/Card";
-import Order from "../component/dashboard/Order";
-import { useEffect, useState } from "react";
-import authApiClient from "../services/auth_apiClient";
-import useAuthContext from "../hooks/useAuthContext";
-import apiClient from "../services/api-client";
+import { useQuery } from "@tanstack/react-query"
+import { FiShoppingBag, FiShoppingCart, FiStar } from "react-icons/fi"
+import Card from "../component/dashboard/Card"
+import WelcomeBanner from "../component/dashboard/WelcomeBanner"
+import authApiClient from "../services/auth_apiClient"
+import OrderTracker from "../component/dashboard/OrderTracker"
+import MyReviews from "../component/dashboard/MyReviews"
+import Order from "../component/dashboard/Order"
 
-export default function Dashboard() {
-  const [totalUser, setTotalUser] = useState([]);
-  const [orders, setOrders] = useState([]);
-  const [flower, setFlower] = useState([]);
-  const [categories, setCategories] = useState([]);
+const TakaIcon = ({ className = "" }) => (
+  <span className={`${className} inline-flex items-center justify-center text-lg font-semibold leading-none`}>
+    ৳
+  </span>
+)
 
-  const {user} = useAuthContext();
+const formatTaka = (n) => `৳${Number(n || 0).toLocaleString("en-BD")}`
+const plural = (n, word) => `${n} ${word}${n === 1 ? "" : "s"}`
 
-  useEffect(() => {
-    apiClient.get("/category/").then((res) => setCategories(res.data));
-  }, []);
+const Dashboard = () => {
+  const {
+    data: stats,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["dashboard-stats"],
+    queryFn: async () => {
+      const res = await authApiClient.get("/dashboard/stats/")
+      return res.data
+    },
+  })
 
-  useEffect(() => {
-    authApiClient.get("/flowers/")
-    .then((res) => {
-      setFlower(res.data)
-    })
-  }, [])
+  const s = stats ?? {}
+  const change = s.spent_change_percent
 
-  useEffect(() => {
-    authApiClient.get("/orders/")
-    .then((res) => {
-      setOrders(res.data)
-    })
-  }, [])
-
-  useEffect(() => {
-    authApiClient.get("/auth/users/")
-    .then((res) => {
-      setTotalUser(res.data)
-    })
-  }, [])
-  
   return (
-    <div>
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-            <Card icon={FiPackage} title="Total Flowers" value={flower.count}/>
-            <Card icon={FiShoppingCart} title="Total Orders" value={orders.length}/>
-            {user?.is_staff ? (
-              <Card icon={FiUsers} title="Total Users" value={totalUser.length}/>
-            ) : (
-              <Card icon={FiTag} title="Total Categories" value={categories.length}/>
-            )}
-            <Card icon={FiStar} title="Average Rating" value="5.9"/>
-          </div>
-          <Order/>
+    <div className="space-y-6">
+      <WelcomeBanner />
+
+      {error && (
+        <p role="alert" className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
+          Couldn't load your numbers. Please refresh the page.
+        </p>
+      )}
+
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+        <Card
+          icon={FiShoppingBag}
+          title="Total orders"
+          value={s.total_orders}
+          subtitle={s.orders_this_month > 0 ? `↑ ${s.orders_this_month} this month` : "No orders this month"}
+          tone={s.orders_this_month > 0 ? "up" : "muted"}
+          loading={isLoading}
+        />
+
+        <Card
+          icon={FiShoppingCart}
+          title="Items in cart"
+          value={s.items_in_cart}
+          subtitle={s.items_in_cart > 0 ? "Go to checkout" : "Your cart is empty"}
+          tone={s.items_in_cart > 0 ? "action" : "muted"}
+          loading={isLoading}
+        />
+
+        <Card
+          icon={TakaIcon}
+          title="Total spent"
+          value={stats ? formatTaka(s.total_spent) : undefined}
+          subtitle={
+            change == null
+              ? "Paid orders only"
+              : `${change >= 0 ? "↑" : "↓"} ${Math.abs(change)}% vs last month`
+          }
+          tone={change == null ? "muted" : change >= 0 ? "up" : "down"}
+          loading={isLoading}
+        />
+
+        <Card
+          icon={FiStar}
+          title="Reviews given"
+          value={s.reviews_given}
+          subtitle={
+            s.reviews_given > 0
+              ? `Across ${plural(s.reviewed_flowers, "flower")}`
+              : "Review your first flower"
+          }
+          loading={isLoading}
+        />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+        <OrderTracker />
+        <MyReviews />
+      </div>
+
+      <Order />
     </div>
-  );
+  )
 }
+
+export default Dashboard

@@ -1,70 +1,137 @@
-import { FiMenu, FiX } from "react-icons/fi";
+import { useState } from "react";
+import {
+  FiBell,
+  FiChevronDown,
+  FiHome,
+  FiLogOut,
+  FiMenu,
+  FiSearch,
+  FiSettings,
+  FiUser,
+} from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
 import useAuthContext from "../../hooks/useAuthContext";
 
-const Navbar = ({ sidebarOpen }) => {
-  const { logoutUser } = useAuthContext();
+// notifications > 0 hole bell-er upor lal dot dekhabe
+const Navbar = () => {
+  const { user, logoutUser } = useAuthContext();
   const navigate = useNavigate();
+  const [query, setQuery] = useState("");
+
+  const fullName =
+    [user?.first_name, user?.last_name].filter(Boolean).join(" ") ||
+    user?.email ||
+    "User";
+  const role = user?.is_superuser
+    ? "Super Admin"
+    : user?.is_staff
+    ? "Admin"
+    : "Customer";
+  const initials = fullName
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w[0])
+    .join("")
+    .toUpperCase();
+
+  // DaisyUI dropdown focus diye khole, tai click-er por focus soriye bondho korte hoy
+  const closeDropdown = () => document.activeElement?.blur();
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    const q = query.trim();
+    if (!q) return;
+    navigate(`/dashboard/flowers?search=${encodeURIComponent(q)}`);
+  };
 
   const handleLogout = () => {
+    closeDropdown();
     logoutUser();
-    navigate("/")
-  }
-  const avatarUrl =
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2ci45lDsJ5gEB2_-lHyyzjvSA08XAgz52uQ&s";
+    navigate("/");
+  };
+
+  const Avatar = ({ size = "h-10 w-10" }) => (
+    <span
+      className={`grid ${size} shrink-0 place-items-center rounded-full bg-gradient-to-br from-pink-400 to-rose-500 text-sm font-bold text-white ring-2 ring-white`}
+    >
+      {initials || <FiUser />}
+    </span>
+  );
 
   return (
-    <div className="navbar bg-white shadow-sm px-4 sticky top-0 z-50">
-      {/* Sidebar toggle button */}
-      <div className="flex-none lg:hidden">
-        <label htmlFor="drawer-toggle" className="btn btn-square btn-ghost">
-          {sidebarOpen ? (
-            <FiX className="h-6 w-6" />
-          ) : (
-            <FiMenu className="h-6 w-6" />
-          )}
-        </label>
-      </div>
+    <header className="sticky top-0 z-30 flex items-center gap-3 border-b border-gray-100 bg-white/80 px-4 py-3 backdrop-blur sm:px-6">
+      {/* Mobile sidebar toggle */}
+      <label
+        htmlFor="drawer-toggle"
+        aria-label="Open sidebar"
+        className="btn btn-square btn-ghost btn-sm lg:hidden"
+      >
+        <FiMenu className="h-5 w-5" />
+      </label>
 
-      {/* Logo / Title */}
-      <div className="flex-1">
-        <h2 className="text-xl font-bold text-gray-800">Dashboard</h2>
-      </div>
+      <div className="ml-auto flex items-center gap-1 sm:gap-3">
 
-      {/* Avatar Dropdown */}
-      <div className="flex-none">
+        {/* Profile dropdown */}
         <div className="dropdown dropdown-end">
-          <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
-            <div className="w-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-              <img
-                alt="User Avatar"
-                src={avatarUrl}
-                onError={(e) =>
-                  (e.target.src = "https://ui-avatars.com/api/?name=User&background=0D8ABC&color=fff")
-                }
-              />
-            </div>
-          </label>
-          <ul
+          <div
             tabIndex={0}
-            className="menu menu-sm dropdown-content mt-3 z-[10] p-2 shadow-lg bg-white rounded-box w-52"
+            role="button"
+            aria-label="Open profile menu"
+            className="flex cursor-pointer items-center gap-3 rounded-xl p-1 transition hover:bg-gray-50 sm:pr-2"
           >
-            <li>
-              <Link to="/dashboard/profile" className="justify-between">
-                Profile
-                <span className="badge badge-primary text-white">New</span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/settings">Settings</Link>
-            </li>
-            <li>
-              <button onClick={handleLogout} className="text-left w-full">Logout</button>
-            </li>
-          </ul>
+            <Avatar />
+            <span className="hidden text-left leading-tight sm:block">
+              <span className="block max-w-32 truncate text-sm font-semibold text-gray-900">
+                {fullName}
+              </span>
+              <span className="block text-xs text-gray-400">{role}</span>
+            </span>
+            <FiChevronDown className="hidden h-4 w-4 text-gray-400 sm:block" />
+          </div>
+
+          <div
+            tabIndex={0}
+            className="dropdown-content z-50 mt-3 w-60 rounded-2xl border border-gray-100 bg-white p-2 shadow-xl"
+          >
+            <div className="flex items-center gap-3 border-b border-gray-100 px-3 pb-3 pt-2">
+              <Avatar size="h-9 w-9" />
+              <div className="min-w-0 leading-tight">
+                <p className="truncate text-sm font-semibold text-gray-900">{fullName}</p>
+                <p className="truncate text-xs text-gray-400">{user?.email}</p>
+              </div>
+            </div>
+
+            <ul className="menu menu-sm gap-0.5 p-0 pt-2 text-gray-600">
+              <li>
+                <Link to="/dashboard/profile" onClick={closeDropdown}>
+                  <FiUser className="h-4 w-4" /> Profile
+                </Link>
+              </li>
+              <li>
+                <Link to="/settings" onClick={closeDropdown}>
+                  <FiSettings className="h-4 w-4" /> Settings
+                </Link>
+              </li>
+              <li>
+                <Link to="/" onClick={closeDropdown}>
+                  <FiHome className="h-4 w-4" /> Visit store
+                </Link>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="text-rose-600 hover:bg-rose-50"
+                >
+                  <FiLogOut className="h-4 w-4" /> Logout
+                </button>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
-    </div>
+    </header>
   );
 };
 

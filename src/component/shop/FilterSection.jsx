@@ -94,7 +94,8 @@ const FilterSection = ({priceRange, handlePriceChange, categories, selectedCateg
         </label>
         <select
           className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          value={sortOrder} onChange={(e)=> handleSorting(e.target.value)}
+          value={sortOrder} 
+          onChange={(e)=> handleSorting(e.target.value)}
         >
           <option value="">Default</option>
           <option value="price">Price: Low to High</option>

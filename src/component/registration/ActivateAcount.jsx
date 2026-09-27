@@ -14,11 +14,11 @@ const ActivateAccount = () => {
     apiClient
       .post("/auth/users/activation/", { uid, token })
       .then(() => {
-        setMessage("🎉 Your account has been activated successfully!");
+        setMessage(" Your account has been activated successfully!");
         setTimeout(() => navigate("/login"), 3000);
       })
       .catch(() => {
-        setError("❌ Something went wrong. Please check your activation link.");
+        setError(" Something went wrong. Please check your activation link.");
       })
       .finally(() => {
         setLoading(false);

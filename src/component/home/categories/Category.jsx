@@ -1,33 +1,26 @@
-import { useEffect, useState } from "react";
-import apiClient from "../../../services/api-client";
-import CategoryItems from "./CategoryItems";
-import useAuthContext from "../../../hooks/useAuthContext";
-import ErrorAlert from '../../../ErrorAlert';
+import { useQuery } from "@tanstack/react-query"
+import apiClient from "../../../services/api-client"
+import CategoryItems from "./CategoryItems"
+import useAuthContext from "../../../hooks/useAuthContext"
+import ErrorAlert from "../../../ErrorAlert"
 
 const Category = () => {
-  const [categories, setCategories] = useState([]);
-  const [isLoading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const { user } = useAuthContext()
 
-  const {user} = useAuthContext();
+  const { data: categories = [], isLoading, error } = useQuery({
+    queryKey: ["categories"],
+    queryFn: async () => {
+      const res = await apiClient.get("/category/")
+      return res.data
+    },
+  })
 
-  useEffect(() => {
-    setLoading(true)
-    apiClient.get("/category/")
-    .then((res) => setCategories(res.data))
-    .catch((err) => setError(err.message))
-    .finally(() => setLoading(false))
-  }, []);
   return (
     <section className="py-12 px-4 max-w-7xl mx-auto">
-      {/* Category Heading  */}
       <div className="flex justify-between items-center mb-8">
         <h2 className="text-xl font-bold">Browse Categories</h2>
         {user && (
-          <a
-            href="/dashboard/categories/"
-            className="btn hover:bg-primary hover:text-white transition px-6 py-6 rounded-full text-lg"
-          >
+          <a href="/dashboard/categories/" className="btn hover:bg-primary hover:text-white transition px-6 py-6 rounded-full text-lg">
             View All
           </a>
         )}
@@ -39,16 +32,17 @@ const Category = () => {
         </div>
       )}
 
-      {error && <ErrorAlert error={error}/>}
+      {error && <ErrorAlert error={error.message} />}
 
-      {/* Category Grid  */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {categories.map((category, index) => (
-          <CategoryItems key={category.id} index={index} category={category} />
-        ))}
-      </div>
+      {!isLoading && !error && (
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {categories.map((category, index) => (
+            <CategoryItems key={category.id} index={index} category={category} />
+          ))}
+        </div>
+      )}
     </section>
-  );
-};
+  )
+}
 
-export default Category;
+export default Category

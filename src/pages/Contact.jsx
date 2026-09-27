@@ -1,7 +1,11 @@
 import { useForm } from "react-hook-form";
+import { useState } from "react";
+import { HiOutlineMail, HiOutlinePhone, HiOutlineChat } from "react-icons/hi";
 import apiClient from "../services/api-client";
 
 const Contact = () => {
+  const [message, setMessage] = useState(null);
+
   const {
     register,
     handleSubmit,
@@ -11,82 +15,140 @@ const Contact = () => {
 
   const onSubmit = async (data) => {
     try {
-      const response = await apiClient.post("/contact/", data);
-      if (response.status === 200 || response.status === 201) {
-        alert("✅ Your message has been sent successfully!");
+      const res = await apiClient.post("/contact/", data);
+      if (res.status === 200 || res.status === 201) {
+        setMessage({ type: "success", text: "Your message has been sent successfully." });
         reset();
       }
     } catch {
-      alert("❌ Something went wrong. Please try again.");
+      setMessage({ type: "error", text: "Something went wrong. Please try again." });
     }
+    setTimeout(() => setMessage(null), 4000);
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 sm:p-8">
-      <div className="bg-white shadow-lg rounded-xl p-6 sm:p-10">
-        <h2 className="text-3xl font-bold text-gray-800 text-center mb-6">Contact Us</h2>
-        <p className="text-center text-gray-500 mb-8">
-          Have questions or feedback? Send us a message and we will get back to you shortly.
-        </p>
+    <section className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-80 to-cyan-50 flex items-center justify-center px-4 py-16">
+      <div className="w-full max-w-5xl grid md:grid-cols-2 gap-12">
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-          {/* Email */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-            <input
-              type="email"
-              {...register("email", { required: "Email is required" })}
-              placeholder="you@example.com"
-              className={`w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-400 ${errors.email ? 'border-red-500' : 'border-gray-300'}`}
-            />
-            {errors.email && <p className="text-red-600 text-sm mt-1">{errors.email.message}</p>}
-          </div>
+        {/* Left Info */}
+        <div className="hidden md:flex flex-col justify-center">
+          <h2 className="text-4xl font-extrabold text-gray-900 leading-tight">
+            Let’s talk about <br /> your questions
+          </h2>
+          <p className="mt-4 text-gray-600 max-w-md">
+            Whether you have a question, feedback, or need support — our team is ready to help you.
+          </p>
 
-          {/* Phone Number */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
-            <input
-              type="text"
-              {...register("phone_number", {
-                required: "Phone number is required",
-                pattern: { value: /^\d{11}$/, message: "Phone number must be exactly 11 digits" },
-              })}
-              placeholder="01xxxxxxxxx"
-              maxLength={11}
-              className={`w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-400 ${errors.phone_number ? 'border-red-500' : 'border-gray-300'}`}
-            />
-            {errors.phone_number && <p className="text-red-600 text-sm mt-1">{errors.phone_number.message}</p>}
+          <div className="mt-8 space-y-4 text-sm text-gray-700">
+            <p>📧 tazulislam42609770@gmail.com</p>
+            <p>📞 +880 1842609770</p>
+            <p>🏢 Bangladesh</p>
           </div>
+        </div>
+
+        {/* Form Card */}
+        <div className="bg-white/90 backdrop-blur-xl rounded-2xl shadow-xl border border-gray-200 p-8 sm:p-10">
+          <h3 className="text-2xl font-bold text-gray-900 mb-2">
+            Contact Us
+          </h3>
+          <p className="text-sm text-gray-500 mb-8">
+            Fill out the form below and we’ll get back to you shortly.
+          </p>
 
           {/* Message */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Message</label>
-            <textarea
-              rows={5}
-              {...register("comment", { required: "Message is required" })}
-              placeholder="Write your message here..."
-              className={`w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-400 ${errors.write_something ? 'border-red-500' : 'border-gray-300'}`}
-            />
-            {errors.write_something && <p className="text-red-600 text-sm mt-1">{errors.write_something.message}</p>}
-          </div>
+          {message && (
+            <div
+              className={`mb-6 rounded-lg px-4 py-3 text-sm font-medium text-center
+                ${
+                  message.type === "success"
+                    ? "bg-green-50 text-green-700 border border-green-200"
+                    : "bg-red-50 text-red-700 border border-red-200"
+                }`}
+            >
+              {message.text}
+            </div>
+          )}
 
-          {/* Submit Button with Spinner */}
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className=" cursor-pointer w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg flex justify-center items-center space-x-2 transition disabled:opacity-50"
-          >
-            {isSubmitting && (
-              <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
-              </svg>
-            )}
-            <span>{isSubmitting ? 'Sending...' : 'Send Message'}</span>
-          </button>
-        </form>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            {/* Email */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Email address
+              </label>
+              <div className="relative">
+                <HiOutlineMail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <input
+                  type="email"
+                  {...register("email", { required: "Email is required" })}
+                  className={`w-full pl-10 pr-3 py-2.5 rounded-lg border bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500
+                    ${errors.email ? "border-red-500" : "border-gray-300"}`}
+                  placeholder="you@example.com"
+                />
+              </div>
+              {errors.email && (
+                <p className="text-xs text-red-500 mt-1">{errors.email.message}</p>
+              )}
+            </div>
+
+            {/* Phone */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Phone number
+              </label>
+              <div className="relative">
+                <HiOutlinePhone className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <input
+                  type="text"
+                  maxLength={11}
+                  {...register("phone_number", {
+                    required: "Phone number is required",
+                    pattern: {
+                      value: /^\d{11}$/,
+                      message: "Must be exactly 11 digits",
+                    },
+                  })}
+                  className={`w-full pl-10 pr-3 py-2.5 rounded-lg border bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500
+                    ${errors.phone_number ? "border-red-500" : "border-gray-300"}`}
+                  placeholder="01XXXXXXXXX"
+                />
+              </div>
+              {errors.phone_number && (
+                <p className="text-xs text-red-500 mt-1">{errors.phone_number.message}</p>
+              )}
+            </div>
+
+            {/* Message */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Message
+              </label>
+              <div className="relative">
+                <HiOutlineChat className="absolute left-3 top-3 text-gray-400" />
+                <textarea
+                  rows={5}
+                  {...register("comment", { required: "Message is required" })}
+                  className={`w-full pl-10 pr-3 py-2.5 rounded-lg border bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500
+                    ${errors.comment ? "border-red-500" : "border-gray-300"}`}
+                  placeholder="Write your message..."
+                />
+              </div>
+              {errors.comment && (
+                <p className="text-xs text-red-500 mt-1">{errors.comment.message}</p>
+              )}
+            </div>
+
+            {/* Submit */}
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2.5 rounded-lg transition disabled:opacity-60"
+            >
+              {isSubmitting ? "Sending..." : "Send Message"}
+            </button>
+          </form>
+        </div>
       </div>
-    </div>
+    </section>
   );
 };
 

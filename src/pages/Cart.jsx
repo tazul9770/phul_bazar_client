@@ -1,104 +1,44 @@
-import { Suspense, useEffect, useState } from 'react';
-import useCartContext from '../hooks/useCartContext';
-import CartItemList from '../component/cart/CartItemsList';
-import CartSummary from '../component/cart/CartSummary';
+import { Suspense,useEffect } from "react";
+import { FaShoppingBag } from "react-icons/fa";
+import useCartContext from "../hooks/useCartContext";
+import CartItemList from "../component/cart/CartItemsList";
+import CartSummary from "../component/cart/CartSummary";
 
-const Cart = () => {
-  const {
-    cart,
-    loading,
-    cartId,
-    createOrGetCart,
-    updateCartItemQuantity,
-    deleteCartItems,
-  } = useCartContext();
+const Cart=()=>{
+  const {cart,loading,cartId,createOrGetCart,updateCartItemQuantity,deleteCartItems}=useCartContext();
 
-  const [localCart, setLocalCart] = useState(cart);
+  useEffect(()=>{
+    if(!cart&&!loading) createOrGetCart();
+  },[cart,loading,createOrGetCart]);
 
-  // Fetch cart if not already loaded
-  useEffect(() => {
-    if (!cart && !loading) {
-      createOrGetCart();
-    }
-  }, [cart, loading, createOrGetCart]);
+  if(loading) return <div className="flex min-h-[60vh] items-center justify-center"><div className="text-center"><span className="inline-block h-10 w-10 animate-spin rounded-full border-4 border-pink-200 border-t-pink-600"></span><p className="mt-4 font-medium text-gray-500">Loading your cart...</p></div></div>;
 
-  // Sync localCart with global cart when updated
-  useEffect(() => {
-    setLocalCart(cart);
-  }, [cart]);
+  if(!cart) return <div className="flex min-h-[60vh] items-center justify-center text-gray-500">No cart found.</div>;
 
-  // Update item quantity
-  const handleUpdateQuantity = async (itemId, newQuantity) => {
-    const prevCart = localCart;
-
-    setLocalCart((prev) => {
-      const updatedItems = prev.items.map((item) =>
-        item.id === itemId
-          ? {
-              ...item,
-              quantity: newQuantity,
-              total_price: item.flower.price * newQuantity,
-            }
-          : item
-      );
-
-      const newTotalPrice = updatedItems.reduce(
-        (sum, item) => sum + item.total_price,
-        0
-      );
-
-      return { ...prev, items: updatedItems, total_price: newTotalPrice };
-    });
-
-    try {
-      await updateCartItemQuantity(itemId, newQuantity);
-    } catch (error) {
-      console.error(error);
-      setLocalCart(prevCart); // rollback if error
-    }
-  };
-
-  // Remove item from cart
-  const handleRemoveItem = async (itemId) => {
-    setLocalCart((prev) => {
-      const updatedItems = prev.items.filter((item) => item.id !== itemId);
-      const newTotalPrice = updatedItems.reduce(
-        (sum, item) => sum + item.total_price,
-        0
-      );
-      return { ...prev, items: updatedItems, total_price: newTotalPrice };
-    });
-
-    try {
-      await deleteCartItems(itemId);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  // Loading / empty cart fallback
-  if (loading) return <p className='text-xl font-bold text-center text-black'>Loading...</p>;
-  if (!localCart) return <p>No Cart Found</p>;
+  const items=cart.items||[];
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div>
-          <Suspense fallback={<p>Loading items...</p>}>
-            <CartItemList
-              items={localCart.items}
-              handleUpdateQuantity={handleUpdateQuantity}
-              handleRemoveItem={handleRemoveItem}
-            />
-          </Suspense>
+    <div className="min-h-screen bg-gray-50 px-4 py-6 sm:px-6 lg:px-8 lg:py-10">
+      <div className="mx-auto max-w-7xl">
+        <div className="mb-8 flex items-center gap-3">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-pink-100 text-pink-600"><FaShoppingBag/></div>
+          <div><h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">Shopping Cart</h1><p className="text-sm text-gray-500">{items.length} {items.length===1?"item":"items"} in your cart</p></div>
         </div>
-        <div>
-          <CartSummary
-            totalPrice={localCart.total_price}
-            itemCount={localCart.items.length}
-            cartId={cartId}
-          />
-        </div>
+
+        {items.length===0 ? (
+          <div className="rounded-3xl bg-white px-6 py-20 text-center shadow-sm">
+            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-pink-50 text-3xl text-pink-500">🛒</div>
+            <h2 className="mt-5 text-xl font-bold text-gray-800">Your cart is empty</h2>
+            <p className="mt-2 text-sm text-gray-500">Looks like you haven't added anything to your cart yet.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_360px]">
+            <Suspense fallback={<div className="p-10 text-center">Loading items...</div>}>
+              <CartItemList items={items} handleUpdateQuantity={updateCartItemQuantity} handleRemoveItem={deleteCartItems}/>
+            </Suspense>
+            <CartSummary totalPrice={cart.total_price||0} itemCount={items.length} cartId={cartId}/>
+          </div>
+        )}
       </div>
     </div>
   );

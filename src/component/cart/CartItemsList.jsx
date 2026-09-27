@@ -1,135 +1,51 @@
-import { FaRegTrashAlt } from "react-icons/fa";
+import { FaMinus,FaPlus,FaRegTrashAlt,FaBoxOpen } from "react-icons/fa";
 
-const CartItemList = ({ items, handleUpdateQuantity, handleRemoveItem }) => {
-  if (!items?.length) {
-    return (
-      <div className="py-10 text-center text-gray-500 text-lg">
-        🛒 Your cart is empty
-      </div>
-    );
-  }
+const CartItemList=({items,handleUpdateQuantity,handleRemoveItem})=>{
+  if(!items?.length) return <div className="rounded-3xl bg-white p-12 text-center shadow-sm"><FaBoxOpen className="mx-auto text-4xl text-gray-300"/><p className="mt-4 text-gray-500">Your cart is empty</p></div>;
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 bg-white rounded-2xl shadow-xl">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-        🛍️ Your Shopping Cart
-      </h2>
+    <div className="overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-sm">
+      <div className="border-b border-gray-100 px-5 py-5 sm:px-7"><h2 className="text-lg font-bold text-gray-900">Cart Items</h2><p className="mt-1 text-sm text-gray-500">Review and manage your selected products</p></div>
 
-      {/* Desktop Table */}
-      <div className="hidden md:block overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200 text-sm">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-4 py-3 text-left font-semibold text-gray-600">Product</th>
-              <th className="px-4 py-3 text-right font-semibold text-gray-600">Price</th>
-              <th className="px-4 py-3 text-center font-semibold text-gray-600">Quantity</th>
-              <th className="px-4 py-3 text-right font-semibold text-gray-600">Total</th>
-              <th className="px-4 py-3"></th>
-            </tr>
-          </thead>
+      <div className="hidden overflow-x-auto md:block">
+        <table className="w-full">
+          <thead className="bg-gray-50"><tr className="text-xs uppercase tracking-wider text-gray-500"><th className="px-6 py-4 text-left">Product</th><th className="px-4 py-4 text-center">Price</th><th className="px-4 py-4 text-center">Quantity</th><th className="px-4 py-4 text-right">Total</th><th className="px-6 py-4"></th></tr></thead>
           <tbody className="divide-y divide-gray-100">
-            {items.map((item) => (
-              <tr key={item.id} className="hover:bg-gray-50">
-                <td className="px-4 py-4 font-medium text-gray-800">
-                  {item.flower.name}
-                </td>
-                <td className="px-4 py-4 text-right text-gray-700">
-                  ${item.flower.price.toFixed(2)}
-                </td>
-                <td className="px-4 py-4">
-                  <div className="flex justify-center items-center gap-2">
-                    <button
-                      onClick={() => handleUpdateQuantity(item.id, Math.max(1, item.quantity - 1))}
-                      className="w-7 h-7 flex justify-center items-center rounded-md bg-gray-100 hover:bg-gray-200"
-                    >
-                      −
-                    </button>
-                    <input
-                      type="text"
-                      value={item.quantity}
-                      readOnly
-                      className="w-10 text-center border border-gray-300 rounded-md text-sm py-1"
-                    />
-                    <button
-                      onClick={() => handleUpdateQuantity(item.id, item.quantity + 1)}
-                      className="w-7 h-7 flex justify-center items-center rounded-md bg-gray-100 hover:bg-gray-200"
-                    >
-                      +
-                    </button>
-                  </div>
-                </td>
-                <td className="px-4 py-4 text-right font-semibold text-gray-800">
-                  ${(item.flower.price * item.quantity).toFixed(2)}
-                </td>
-                <td className="px-4 py-4 text-center">
-                  <button
-                    onClick={() => handleRemoveItem(item.id)}
-                    className="p-2 rounded-full text-red-500 hover:bg-red-100 transition"
-                  >
-                    <FaRegTrashAlt className="w-4 h-4" />
-                  </button>
-                </td>
+            {items.map(item=>(
+              <tr key={item.id} className="transition hover:bg-pink-50/30">
+                <td className="px-6 py-5"><p className="font-semibold capitalize text-gray-900">{item.flower.name}</p><p className="mt-1 text-xs text-gray-400">Product #{item.flower.id}</p></td>
+                <td className="px-4 py-5 text-center font-medium text-gray-600">${Number(item.flower.price).toFixed(2)}</td>
+                <td className="px-4 py-5"><QuantityControl item={item} onUpdate={handleUpdateQuantity}/></td>
+                <td className="px-4 py-5 text-right font-bold text-gray-900">${(Number(item.flower.price)*item.quantity).toFixed(2)}</td>
+                <td className="px-6 py-5 text-center"><DeleteButton onDelete={()=>handleRemoveItem(item.id)}/></td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      {/* Mobile Card View */}
-      <div className="md:hidden space-y-4">
-        {items.map((item) => (
-          <div
-            key={item.id}
-            className="border rounded-2xl p-4 shadow-sm flex flex-col gap-3 bg-white hover:shadow-md transition"
-          >
-            <div className="flex justify-between items-center">
-              <span className="font-semibold text-gray-800">{item.flower.name}</span>
-              <button
-                onClick={() => handleRemoveItem(item.id)}
-                className="text-red-500 hover:bg-red-100 p-2 rounded-full"
-              >
-                <FaRegTrashAlt className="w-4 h-4" />
-              </button>
-            </div>
-
-            <div className="flex justify-between text-sm text-gray-600">
-              <span>Price:</span>
-              <span>${item.flower.price.toFixed(2)}</span>
-            </div>
-
-            <div className="flex justify-between text-sm text-gray-600 items-center">
-              <span>Quantity:</span>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => handleUpdateQuantity(item.id, Math.max(1, item.quantity - 1))}
-                  className="w-7 h-7 flex justify-center items-center rounded-md bg-gray-100 hover:bg-gray-200"
-                >
-                  −
-                </button>
-                <input
-                  type="text"
-                  value={item.quantity}
-                  readOnly
-                  className="w-10 text-center border border-gray-300 rounded-md text-sm"
-                />
-                <button
-                  onClick={() => handleUpdateQuantity(item.id, item.quantity + 1)}
-                  className="w-7 h-7 flex justify-center items-center rounded-md bg-gray-100 hover:bg-gray-200"
-                >
-                  +
-                </button>
-              </div>
-            </div>
-
-            <div className="flex justify-between font-semibold text-gray-800">
-              <span>Total:</span>
-              <span>${(item.flower.price * item.quantity).toFixed(2)}</span>
-            </div>
+      <div className="space-y-4 p-4 md:hidden">
+        {items.map(item=>(
+          <div key={item.id} className="rounded-2xl border border-gray-100 bg-gray-50/50 p-4">
+            <div className="flex items-start justify-between gap-3"><div><h3 className="font-bold capitalize text-gray-900">{item.flower.name}</h3><p className="mt-1 text-sm text-gray-500">${Number(item.flower.price).toFixed(2)} each</p></div><DeleteButton onDelete={()=>handleRemoveItem(item.id)}/></div>
+            <div className="mt-5 flex items-center justify-between"><QuantityControl item={item} onUpdate={handleUpdateQuantity}/><p className="font-bold text-gray-900">${(Number(item.flower.price)*item.quantity).toFixed(2)}</p></div>
           </div>
         ))}
       </div>
     </div>
   );
 };
+
+const QuantityControl=({item,onUpdate})=>(
+  <div className="flex items-center gap-2">
+    <button type="button" disabled={item.quantity<=1} onClick={()=>onUpdate(item.id,Math.max(1,item.quantity-1))} className="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-600 shadow-sm transition hover:border-pink-300 hover:text-pink-600 disabled:cursor-not-allowed disabled:opacity-40"><FaMinus className="text-[10px]"/></button>
+    <span className="flex h-8 min-w-9 items-center justify-center rounded-lg bg-white px-2 text-sm font-bold text-gray-800 shadow-sm">{item.quantity}</span>
+    <button type="button" onClick={()=>onUpdate(item.id,item.quantity+1)} className="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-600 shadow-sm transition hover:border-pink-300 hover:text-pink-600"><FaPlus className="text-[10px]"/></button>
+  </div>
+);
+
+const DeleteButton=({onDelete})=>(
+  <button type="button" onClick={onDelete} className="flex h-9 w-9 items-center justify-center rounded-xl text-red-400 transition hover:bg-red-50 hover:text-red-600"><FaRegTrashAlt className="text-sm"/></button>
+);
 
 export default CartItemList;

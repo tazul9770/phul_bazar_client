@@ -5,11 +5,12 @@ import useAuthContext from "../../hooks/useAuthContext";
 import { useState } from "react";
 import authApiClient from "../../services/auth_apiClient";
 
-const OrderCard = ({ order, onCancel }) => {
+const OrderCard = ({ order, onCancel, isLast, currentPage, totalPages, onPageChange }) => {
   const { user } = useAuthContext();
   const [status, setStatus] = useState(order.status);
   const [loading, setLoading] = useState(false);
 
+  const token = JSON.parse(localStorage.getItem("authTokens"))
   const subtotal = parseFloat(order.total_price) || 0;
   const shipping = order.items?.length === 0 || subtotal < 100 ? 0 : 15;
   const tax = subtotal * 0.1;
@@ -55,7 +56,9 @@ const OrderCard = ({ order, onCancel }) => {
   const handleUserCancel = async () => {
     if (!window.confirm("Are you sure you want to cancel this order?")) return;
     try {
-      await authApiClient.delete(`/orders/${order.id}/`);
+      await authApiClient.delete(`/orders/${order.id}/`, {
+                headers:{Authorization:`JWT ${token?.access}`}
+            });
       if (onCancel) onCancel(order.id);
       alert("Order canceled successfully");
     } catch (err) {
@@ -149,6 +152,37 @@ const OrderCard = ({ order, onCancel }) => {
           </button>
         )}
       </div>
+
+      {/* Pagination - only below the last card */}
+      {isLast && totalPages > 1 && (
+        <div className="bg-white p-4 flex justify-center items-center gap-2 border-t">
+          <button
+            onClick={() => onPageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="px-3 py-1 rounded-lg border border-gray-300 text-sm text-gray-600 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+          >
+            Prev
+          </button>
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+            <button
+              key={p}
+              onClick={() => onPageChange(p)}
+              className={`px-3 py-1 rounded-lg text-sm font-medium cursor-pointer ${
+                p === currentPage ? "bg-indigo-600 text-white" : "border border-gray-300 text-gray-600 hover:bg-gray-100"
+              }`}
+            >
+              {p}
+            </button>
+          ))}
+          <button
+            onClick={() => onPageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className="px-3 py-1 rounded-lg border border-gray-300 text-sm text-gray-600 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 };
