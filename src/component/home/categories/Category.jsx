@@ -35,7 +35,7 @@ const Category = () => {
       {error && <ErrorAlert error={error.message} />}
 
       {!isLoading && !error && (
-        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {categories.map((category, index) => (
             <CategoryItems key={category.id} index={index} category={category} />
           ))}
