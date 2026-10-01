@@ -1,23 +1,17 @@
 import { useEffect, useState } from "react";
+import { FiChevronLeft, FiChevronRight, FiTrash2, FiInbox } from "react-icons/fi";
 import authApiClient from "../../services/auth_apiClient";
 import useAuthContext from "../../hooks/useAuthContext";
 
-const getStatusBadgeClass = (status) => {
-  switch (status) {
-    case "Not Paid":
-      return "bg-red-100 text-red-700";
-    case "Ready to ship":
-      return "bg-yellow-100 text-yellow-700";
-    case "Shipped":
-      return "bg-blue-100 text-blue-700";
-    case "Delivered":
-      return "bg-green-100 text-green-700";
-    case "Canceled":
-      return "bg-gray-300 text-gray-700";
-    default:
-      return "bg-gray-100 text-gray-700";
-  }
+const STATUS_STYLES = {
+  "Not Paid": "bg-pink-100 text-pink-600",
+  "Ready to ship": "bg-orange-100 text-orange-600",
+  Shipped: "bg-blue-100 text-blue-600",
+  Delivered: "bg-green-100 text-green-600",
+  Canceled: "bg-gray-200 text-gray-600",
 };
+
+const getStatusBadgeClass = (status) => STATUS_STYLES[status] || "bg-gray-100 text-gray-600";
 
 const Order = () => {
   const [orderItems, setOrderItems] = useState([]);
@@ -70,21 +64,26 @@ const Order = () => {
       : orderItems.filter((order) => order.status === filterStatus);
 
   return (
-    <div className="mt-6 bg-white rounded-2xl shadow-md overflow-hidden">
-      <div className="p-4 md:p-6">
+    <div className="mt-6 overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
+      <div className="p-5 sm:p-7">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-4 gap-2">
-          <h3 className="text-xl font-semibold text-gray-800">
-            {user?.is_staff ? "Recent Orders" : `${user.first_name}'s Orders`}
-          </h3>
+        <div className="mb-6 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          <div>
+            <h3 className="text-xl font-bold text-gray-900">
+              {user?.is_staff ? "Recent Orders" : `${user.first_name}'s Orders`}
+            </h3>
+            <p className="mt-0.5 text-sm text-gray-400">
+              {totalCount} order{totalCount === 1 ? "" : "s"} total
+            </p>
+          </div>
 
           {user?.is_staff && (
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="border px-3 py-1 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm text-gray-700 shadow-sm transition focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-100"
             >
-              <option value="All">All</option>
+              <option value="All">All statuses</option>
               <option value="Not Paid">Not Paid</option>
               <option value="Ready to ship">Ready to ship</option>
               <option value="Shipped">Shipped</option>
@@ -96,15 +95,15 @@ const Order = () => {
 
         {/* Loading Spinner */}
         {loading ? (
-          <div className="flex justify-center py-16">
-            <div className="animate-spin h-10 w-10 border-4 border-gray-300 border-t-indigo-500 rounded-full"></div>
+          <div className="flex justify-center py-20">
+            <div className="h-10 w-10 animate-spin rounded-full border-4 border-pink-100 border-t-pink-500"></div>
           </div>
         ) : (
           <>
             {/* Orders Table */}
-            <div className="overflow-auto">
+            <div className="overflow-auto rounded-xl border border-gray-100">
               <table className="min-w-full text-sm">
-                <thead className="bg-gray-100 sticky top-0">
+                <thead className="sticky top-0 bg-gray-50">
                   <tr>
                     {[
                       "Order ID",
@@ -116,88 +115,72 @@ const Order = () => {
                       "Address",
                       "Phone",
                       "Items",
-                    ].map((header, index) => (
+                    ].map((header) => (
                       <th
-                        key={index}
-                        className="px-4 py-3 text-left font-semibold text-gray-700 uppercase whitespace-nowrap"
+                        key={header}
+                        className="whitespace-nowrap px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500"
                       >
                         {header}
                       </th>
                     ))}
                     {filterStatus === "Canceled" && (
-                      <th className="px-4 py-3 text-left font-semibold text-gray-700 uppercase whitespace-nowrap">
+                      <th className="whitespace-nowrap px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
                         Action
                       </th>
                     )}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200">
+                <tbody className="divide-y divide-gray-100">
                   {filteredOrders.length > 0 ? (
                     filteredOrders.map((order) => {
                       const subtotal = parseFloat(order.total_price) || 0;
-                      const hasItems =
-                        Array.isArray(order.items) && order.items.length > 0;
+                      const hasItems = Array.isArray(order.items) && order.items.length > 0;
                       const shipping = !hasItems || subtotal < 100 ? 0 : 15;
                       const tax = subtotal * 0.1;
                       const total = subtotal + shipping + tax;
 
                       return (
-                        <tr
-                          key={order.id}
-                          className="hover:bg-gray-50 transition"
-                        >
-                          <td className="px-4 py-3 font-medium text-gray-800">
-                            {order.id}
-                          </td>
-                          <td className="px-4 py-3 text-gray-700">
-                            {order.user?.id}
-                          </td>
+                        <tr key={order.id} className="transition hover:bg-pink-50/40">
+                          <td className="px-4 py-3 font-medium text-gray-900">#{order.id}</td>
+                          <td className="px-4 py-3 text-gray-600">{order.user?.id}</td>
                           <td className="px-4 py-3">
                             <span
-                              className={`px-2 py-1 rounded-full text-xs font-semibold ${getStatusBadgeClass(
+                              className={`rounded-full px-3 py-1 text-xs font-semibold ${getStatusBadgeClass(
                                 order.status
                               )}`}
                             >
                               {order.status}
                             </span>
                           </td>
-                          <td className="px-4 py-3 text-gray-600">
+                          <td className="whitespace-nowrap px-4 py-3 text-gray-500">
                             {order.created_at}
                           </td>
                           <td className="px-4 py-3 font-semibold text-gray-900">
                             ${total.toFixed(2)}
                           </td>
-                          <td className="px-4 py-3 text-gray-700">
-                            {order.user?.email}
-                          </td>
-                          <td className="px-4 py-3 text-gray-800">
-                            {order.user?.address}
-                          </td>
-                          <td className="px-4 py-3 text-gray-800">
-                            {order.user?.phone_num}
-                          </td>
-                          <td className="px-4 py-3 text-gray-700">
+                          <td className="px-4 py-3 text-gray-600">{order.user?.email}</td>
+                          <td className="px-4 py-3 text-gray-600">{order.user?.address}</td>
+                          <td className="px-4 py-3 text-gray-600">{order.user?.phone_num}</td>
+                          <td className="px-4 py-3 text-gray-600">
                             {hasItems ? (
-                              <ul className="list-disc ml-4">
+                              <ul className="list-disc space-y-0.5 pl-4">
                                 {order.items.map((item, idx) => (
                                   <li key={idx}>
-                                    {item?.flower?.name || "Unknown"} x{" "}
-                                    {item?.quantity || 0}
+                                    {item?.flower?.name || "Unknown"} x {item?.quantity || 0}
                                   </li>
                                 ))}
                               </ul>
                             ) : (
-                              <span className="text-gray-400 italic">
-                                No items
-                              </span>
+                              <span className="italic text-gray-400">No items</span>
                             )}
                           </td>
                           {filterStatus === "Canceled" && (
                             <td className="px-4 py-3">
                               <button
                                 onClick={() => handleDelete(order.id)}
-                                className="text-red-600 hover:underline text-sm"
+                                className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium text-red-500 transition hover:bg-red-50 hover:text-red-600"
                               >
+                                <FiTrash2 size={13} />
                                 Delete
                               </button>
                             </td>
@@ -207,11 +190,11 @@ const Order = () => {
                     })
                   ) : (
                     <tr>
-                      <td
-                        colSpan={filterStatus === "Canceled" ? 10 : 9}
-                        className="text-center py-8 text-gray-500"
-                      >
-                        No orders found for this filter.
+                      <td colSpan={filterStatus === "Canceled" ? 10 : 9} className="py-14">
+                        <div className="flex flex-col items-center gap-2 text-gray-400">
+                          <FiInbox size={28} />
+                          <span className="text-sm">No orders found for this filter.</span>
+                        </div>
                       </td>
                     </tr>
                   )}
@@ -220,33 +203,36 @@ const Order = () => {
             </div>
 
             {/* Pagination Controls */}
-            <div className="flex justify-between items-center mt-6 px-4">
+            <div className="mt-6 flex items-center justify-between">
               <button
                 disabled={!prevPage}
                 onClick={() => setPage((prev) => prev - 1)}
-                className={`px-4 py-2 rounded-md text-sm ${
+                className={`flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-medium transition ${
                   prevPage
-                    ? "bg-indigo-500 text-white hover:bg-indigo-600"
-                    : "bg-gray-200 text-gray-500 cursor-not-allowed"
+                    ? "bg-pink-600 text-white hover:bg-pink-700"
+                    : "cursor-not-allowed bg-gray-100 text-gray-400"
                 }`}
               >
+                <FiChevronLeft size={16} />
                 Previous
               </button>
 
-              <span className="text-gray-600 text-sm">
-                Page {page} | Total: {totalCount}
+              <span className="text-sm text-gray-500">
+                Page <span className="font-semibold text-gray-700">{page}</span> · Total{" "}
+                <span className="font-semibold text-gray-700">{totalCount}</span>
               </span>
 
               <button
                 disabled={!nextPage}
                 onClick={() => setPage((prev) => prev + 1)}
-                className={`px-4 py-2 rounded-md text-sm ${
+                className={`flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-medium transition ${
                   nextPage
-                    ? "bg-indigo-500 text-white hover:bg-indigo-600"
-                    : "bg-gray-200 text-gray-500 cursor-not-allowed"
+                    ? "bg-pink-600 text-white hover:bg-pink-700"
+                    : "cursor-not-allowed bg-gray-100 text-gray-400"
                 }`}
               >
                 Next
+                <FiChevronRight size={16} />
               </button>
             </div>
           </>

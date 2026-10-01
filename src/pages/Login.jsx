@@ -1,5 +1,6 @@
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
+import { FiMail, FiLock, FiLoader } from "react-icons/fi";
 import useAuthContext from "../hooks/useAuthContext";
 import ErrorAlert from "../ErrorAlert";
 import { useState } from "react";
@@ -11,91 +12,120 @@ const Login = () => {
     formState: { errors },
   } = useForm();
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const {errorMsg, loginUser } = useAuthContext();
+  const { errorMsg, loginUser } = useAuthContext();
   const [loading, setLoading] = useState(false);
 
   const onSubmit = async (data) => {
-    setLoading(true)
+    if (loading) return; // guard: ignore any accidental double-fire
+    setLoading(true);
     try {
       await loginUser(data);
-      setTimeout(() => navigate("/"), 3000)
+      setTimeout(() => navigate("/"), 3000);
     } catch (error) {
       console.log("Login error", error);
-    } finally {
-      setLoading(false)
+      setLoading(false); // re-enable on failure so user can retry
     }
+    // NOTE: on success we intentionally do NOT reset loading —
+    // button stays disabled until navigation happens, so it can't be clicked again.
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-100 to-white px-4 py-12">
-      <div className="w-full max-w-md bg-white shadow-xl rounded-2xl p-8">
-        <div className="mb-6 text-center">
-          <h2 className="mb-3 text-3xl font-bold text-gray-800">Sign In your account</h2>
-          <p className="text-sm text-gray-500">
-            Enter your email and password to log in
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-rose-50 via-pink-50 to-purple-50 px-4 py-12">
+      <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-xl shadow-pink-900/5 ring-1 ring-pink-100 sm:p-10">
+        <div className="mb-8 text-center">
+          <h2 className="text-2xl font-bold text-gray-900 sm:text-3xl">Welcome back</h2>
+          <p className="mt-2 text-sm text-gray-500">
+            Sign in to continue to your account
           </p>
         </div>
 
-        {errorMsg && <ErrorAlert error={errorMsg} />}
+        {errorMsg && (
+          <div className="mb-5">
+            <ErrorAlert error={errorMsg} />
+          </div>
+        )}
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+        <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-5">
           {/* Email Field */}
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="email" className="mb-1.5 block text-sm font-medium text-gray-700">
               Email
             </label>
-            <input
-              id="email"
-              type="email"
-              placeholder="name@example.com"
-              className={`mt-1 w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                errors.email ? "border-red-500" : "border-gray-300"
-              }`}
-              {...register("email", { required: "Email is required" })}
-            />
+            <div className="relative">
+              <FiMail className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+              <input
+                id="email"
+                type="email"
+                placeholder="name@example.com"
+                disabled={loading}
+                className={`w-full rounded-xl border bg-white py-2.5 pl-10 pr-4 text-sm shadow-sm transition focus:outline-none focus:ring-2 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-400 ${
+                  errors.email
+                    ? "border-red-400 focus:ring-red-200"
+                    : "border-gray-200 focus:border-pink-400 focus:ring-pink-100"
+                }`}
+                {...register("email", { required: "Email is required" })}
+              />
+            </div>
             {errors.email && (
-              <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>
+              <p className="mt-1.5 text-xs font-medium text-red-500">{errors.email.message}</p>
             )}
           </div>
 
           {/* Password Field */}
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              placeholder="••••••••"
-              className={`mt-1 w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                errors.password ? "border-red-500" : "border-gray-300"
-              }`}
-              {...register("password", { required: "Password is required" })}
-            />
+            <div className="mb-1.5 flex items-center justify-between">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                Password
+              </label>
+            </div>
+            <div className="relative">
+              <FiLock className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+              <input
+                id="password"
+                type="password"
+                placeholder="••••••••"
+                disabled={loading}
+                className={`w-full rounded-xl border bg-white py-2.5 pl-10 pr-4 text-sm shadow-sm transition focus:outline-none focus:ring-2 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-400 ${
+                  errors.password
+                    ? "border-red-400 focus:ring-red-200"
+                    : "border-gray-200 focus:border-pink-400 focus:ring-pink-100"
+                }`}
+                {...register("password", { required: "Password is required" })}
+              />
+            </div>
             {errors.password && (
-              <p className="mt-1 text-sm text-red-500">{errors.password.message}</p>
+              <p className="mt-1.5 text-xs font-medium text-red-500">{errors.password.message}</p>
             )}
           </div>
 
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200 font-medium cursor-pointer"
             disabled={loading}
+            aria-disabled={loading}
+            aria-busy={loading}
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-pink-600 px-4 py-2.5 text-sm font-semibold text-white shadow-md shadow-pink-600/20 transition hover:bg-pink-700 disabled:cursor-not-allowed disabled:bg-pink-300 disabled:shadow-none"
           >
-            {loading ? "Loggin in..." : "Login"}
+            {loading ? (
+              <>
+                <FiLoader className="animate-spin" />
+                Signing in...
+              </>
+            ) : (
+              "Sign In"
+            )}
           </button>
         </form>
 
         {/* Bottom Link */}
-        <div className="text-center mt-6 text-sm text-gray-600">
-          Don’t have an account?{" "}
-          <Link to="/register" className="text-blue-600 hover:underline font-medium">
+        <p className="mt-6 text-center text-sm text-gray-600">
+          Don't have an account?{" "}
+          <Link to="/register" className="font-medium text-pink-600 hover:underline">
             Sign up
           </Link>
-        </div>
+        </p>
       </div>
     </div>
   );
