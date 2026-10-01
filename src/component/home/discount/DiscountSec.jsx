@@ -3,8 +3,7 @@ import img from "../../../assets/image/pic-Photoroom.png";
 
 const DiscountSec = () => {
   const calculateTimeLeft = () => {
-    const targetDate = new Date("2026-07-30T00:00:00").getTime();
-
+    const targetDate = new Date("2026-10-25T00:00:00").getTime();
     const now = Date.now();
     const diff = targetDate - now;
 
@@ -26,95 +25,96 @@ const DiscountSec = () => {
     return () => clearInterval(timer);
   }, []);
 
+  const timeUnits = [
+    { label: "Days", value: timeLeft.days },
+    { label: "Hours", value: timeLeft.hours },
+    { label: "Minutes", value: timeLeft.minutes },
+    { label: "Seconds", value: timeLeft.seconds },
+  ];
+
   return (
-    <section className="relative w-full py-10 sm:py-16 px-4 sm:px-8 bg-gradient-to-r from-pink-100 via-purple-100 to-indigo-100 overflow-hidden">
-      <div className="relative w-full max-w-7xl mx-auto">
-        {/* Desktop View */}
-        <div className="hidden md:flex absolute inset-0 items-center px-4 sm:px-8 md:px-12">
-          <div className="max-w-sm sm:max-w-md text-left space-y-4 sm:space-y-6">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-purple-700 via-pink-600 to-red-500">
-              Holiday Sales
+    <section className="relative w-full overflow-hidden bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-50">
+      {/* Soft decorative blurs */}
+      <div className="absolute -top-24 -left-24 w-72 h-72 bg-pink-200/40 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-32 -right-20 w-80 h-80 bg-indigo-200/30 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 items-center">
+          
+          {/* Left Content */}
+          <div className="order-2 lg:order-1 space-y-6 sm:space-y-8 text-center lg:text-left">
+            {/* Badge */}
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/70 border border-pink-200 shadow-sm">
+              <span className="w-2 h-2 rounded-full bg-pink-500 animate-pulse" />
+              <span className="text-xs sm:text-sm font-semibold text-pink-600 tracking-wide uppercase">
+                Limited Time Offer
+              </span>
+            </div>
+
+            {/* Heading */}
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-extrabold leading-tight tracking-tight">
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-700 via-pink-600 to-rose-500">
+                Holiday Sales
+              </span>
             </h2>
-            <p className="text-gray-800 text-sm sm:text-base md:text-lg">
-              Enjoy <span className="font-bold text-pink-600">25% off</span> – Hurry up,
-              limited time only!
+
+            {/* Subtext */}
+            <p className="text-gray-700 text-base sm:text-lg max-w-md mx-auto lg:mx-0 leading-relaxed">
+              Enjoy{" "}
+              <span className="font-bold text-pink-600">25% off</span> on selected
+              items. Don’t miss out — offer ends soon!
             </p>
-            <div className="flex flex-wrap gap-3">
-              {[
-                { label: "Days", value: timeLeft.days },
-                { label: "Hours", value: timeLeft.hours },
-                { label: "Minutes", value: timeLeft.minutes },
-                { label: "Seconds", value: timeLeft.seconds },
-              ].map(({ label, value }) => (
+
+            {/* Countdown Timer */}
+            <div className="flex flex-wrap justify-center lg:justify-start gap-3 sm:gap-4">
+              {timeUnits.map(({ label, value }) => (
                 <div
                   key={label}
-                  className="bg-white bg-opacity-90 rounded-lg shadow-md w-16 h-16 sm:w-20 sm:h-20 flex flex-col justify-center items-center border border-pink-300"
+                  className="flex flex-col items-center justify-center w-[70px] h-[70px] sm:w-20 sm:h-20 rounded-2xl bg-white shadow-md border border-pink-100/80"
                 >
-                  <div className="text-xl sm:text-2xl font-bold text-pink-600 tabular-nums">
+                  <span className="text-xl sm:text-2xl font-bold text-pink-600 tabular-nums leading-none">
                     {String(value).padStart(2, "0")}
-                  </div>
-                  <div className="text-[10px] sm:text-xs font-semibold uppercase tracking-widest text-gray-600">
+                  </span>
+                  <span className="mt-1 text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-gray-500">
                     {label}
-                  </div>
+                  </span>
                 </div>
               ))}
             </div>
-            <button className="bg-pink-600 hover:bg-pink-700 text-white text-sm sm:text-base font-semibold px-6 sm:px-8 py-2 sm:py-3 rounded-full shadow-md transition">
-              Shop Now
-            </button>
-          </div>
-        </div>
 
-        {/* Desktop Image */}
-        <img
-          src={img}
-          alt="Man with roses"
-          className="hidden md:block w-full h-auto object-cover"
-        />
-
-        {/* Mobile View (Side by Side Layout) */}
-        <div className="md:hidden grid grid-cols-2 gap-6 items-center">
-          {/* Text & Timer */}
-          <div className="space-y-4 text-left">
-            <h2 className="text-2xl xs:text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-purple-700 via-pink-600 to-red-500">
-              Holiday Sales
-            </h2>
-            <p className="text-gray-800 text-sm xs:text-base">
-              Enjoy <span className="font-bold text-pink-600">25% off</span> – Hurry up,
-              limited time only!
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {[
-                { label: "Days", value: timeLeft.days },
-                { label: "Hours", value: timeLeft.hours },
-                { label: "Minutes", value: timeLeft.minutes },
-                { label: "Seconds", value: timeLeft.seconds },
-              ].map(({ label, value }) => (
-                <div
-                  key={label}
-                  className="bg-white bg-opacity-90 rounded-md shadow w-14 h-14 flex flex-col justify-center items-center border border-pink-300"
+            {/* CTA Button */}
+            <div className="pt-2">
+              <button className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-pink-600 to-rose-500 hover:from-pink-700 hover:to-rose-600 text-white font-semibold text-sm sm:text-base px-8 py-3.5 rounded-full shadow-lg shadow-pink-500/25 transition-all duration-300 hover:shadow-xl hover:shadow-pink-500/30 hover:-translate-y-0.5 active:translate-y-0">
+                Shop Now
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
-                  <div className="text-lg font-bold text-pink-600 tabular-nums">
-                    {String(value).padStart(2, "0")}
-                  </div>
-                  <div className="text-[10px] font-semibold uppercase tracking-widest text-gray-600">
-                    {label}
-                  </div>
-                </div>
-              ))}
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M17 8l4 4m0 0l-4 4m4-4H3"
+                  />
+                </svg>
+              </button>
             </div>
-            <button className="bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-4 py-2 rounded-full shadow transition">
-              Shop Now
-            </button>
           </div>
 
-          {/* Image Right Side */}
-          <div className="flex justify-center mr-32">
-            <img
-              src={img}
-              alt="Man with roses"
-              className="w-2xl max-w-[400px]" 
-            />
+          {/* Right Image - Made Bigger */}
+          <div className="order-1 lg:order-2 flex justify-center lg:justify-end">
+            <div className="relative">
+              {/* Soft glow behind image */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-pink-300/30 to-purple-300/20 rounded-3xl blur-2xl scale-95" />
+              
+              <img
+                src={img}
+                alt="Holiday Sale - Man with roses"
+                className="relative w-full max-w-[380px] sm:max-w-[460px] lg:max-w-[540px] xl:max-w-[600px] h-auto object-contain drop-shadow-2xl"
+              />
+            </div>
           </div>
         </div>
       </div>

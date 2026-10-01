@@ -1,6 +1,7 @@
 import { FaMinus,FaPlus,FaRegTrashAlt,FaBoxOpen } from "react-icons/fa";
 
 const CartItemList=({items,handleUpdateQuantity,handleRemoveItem})=>{
+  
   if(!items?.length) return <div className="rounded-3xl bg-white p-12 text-center shadow-sm"><FaBoxOpen className="mx-auto text-4xl text-gray-300"/><p className="mt-4 text-gray-500">Your cart is empty</p></div>;
 
   return (
@@ -36,13 +37,15 @@ const CartItemList=({items,handleUpdateQuantity,handleRemoveItem})=>{
   );
 };
 
-const QuantityControl=({item,onUpdate})=>(
-  <div className="flex items-center gap-2">
-    <button type="button" disabled={item.quantity<=1} onClick={()=>onUpdate(item.id,Math.max(1,item.quantity-1))} className="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-600 shadow-sm transition hover:border-pink-300 hover:text-pink-600 disabled:cursor-not-allowed disabled:opacity-40"><FaMinus className="text-[10px]"/></button>
-    <span className="flex h-8 min-w-9 items-center justify-center rounded-lg bg-white px-2 text-sm font-bold text-gray-800 shadow-sm">{item.quantity}</span>
-    <button type="button" onClick={()=>onUpdate(item.id,item.quantity+1)} className="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-600 shadow-sm transition hover:border-pink-300 hover:text-pink-600"><FaPlus className="text-[10px]"/></button>
-  </div>
-);
+const QuantityControl=({item,onUpdate})=>{
+  return (
+    <div className="flex items-center gap-2">
+      <button type="button" disabled={item.quantity<=1} onClick={()=>onUpdate(item.id,Math.max(1,item.quantity-1))} className="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-600 shadow-sm transition hover:border-pink-300 hover:text-pink-600 disabled:cursor-not-allowed disabled:opacity-40"><FaMinus className="text-[10px]"/></button>
+      <span className="flex h-8 min-w-9 items-center justify-center rounded-lg bg-white px-2 text-sm font-bold text-gray-800 shadow-sm">{item.quantity}</span>
+      <button type="button" disabled={item.quantity>=item.flower?.stock} onClick={()=>onUpdate(item.id,item.quantity+1)} className="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-600 shadow-sm transition hover:border-pink-300 hover:text-pink-600 disabled:cursor-not-allowed disabled:opacity-40"><FaPlus className="text-[10px]"/></button>
+    </div>
+  );
+};
 
 const DeleteButton=({onDelete})=>(
   <button type="button" onClick={onDelete} className="flex h-9 w-9 items-center justify-center rounded-xl text-red-400 transition hover:bg-red-50 hover:text-red-600"><FaRegTrashAlt className="text-sm"/></button>

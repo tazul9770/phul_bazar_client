@@ -1,4 +1,5 @@
 import { FaRegArrowAltCircleRight, FaTrashAlt } from "react-icons/fa";
+import { GiFlowerPot } from "react-icons/gi";
 import useAuthContext from "../../../hooks/useAuthContext";
 import { useNavigate, useLocation } from "react-router-dom";
 import authApiClient from "../../../services/auth_apiClient";
@@ -39,33 +40,40 @@ const CategoryItems = ({ category }) => {
       onKeyDown={handleKeyDown}
       role="button"
       tabIndex={0}
-      className="group relative flex min-h-[240px] w-full cursor-pointer flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/20 hover:shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+      className="group relative flex w-full flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
     >
-      {/* Decorative petal-glow, brand colored */}
-      <div className="pointer-events-none absolute -right-12 -top-12 h-28 w-28 rounded-full bg-gradient-to-br from-primary/10 to-secondary/10 transition-transform duration-500 ease-out group-hover:scale-150" />
-
-      <div className="relative flex flex-grow flex-col">
-        <div className="mb-5 flex items-start justify-between">
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-secondary text-2xl font-bold uppercase text-white shadow-lg shadow-primary/20 transition-transform duration-300 group-hover:scale-105">
-            {category.name?.charAt(0)}
+      {/* Image / fallback area */}
+      <div className="relative aspect-[4/3] w-full overflow-hidden bg-gradient-to-br from-primary/15 to-secondary/15">
+        {category.image ? (
+          <img
+            src={category.image}
+            alt={category.name}
+            loading="lazy"
+            className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-110"
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center">
+            <GiFlowerPot className="text-5xl text-primary/40" />
           </div>
+        )}
 
-          <span className="rounded-full border border-primary/10 bg-primary/5 px-3 py-1 text-xs font-semibold text-primary">
-            {category.flower_count || 0} Items
-          </span>
-        </div>
+        {/* Gradient overlay for legibility + item count badge */}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-black/0 to-transparent" />
+        <span className="absolute right-3 top-3 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-gray-800 backdrop-blur-sm">
+          {category.flower_count || 0} Items
+        </span>
+        <h3 className="absolute bottom-3 left-4 right-4 truncate text-lg font-bold capitalize text-white drop-shadow-sm sm:text-xl">
+          {category.name}
+        </h3>
+      </div>
 
-        <div className="flex-grow">
-          <h3 className="mb-2 truncate text-lg font-bold capitalize text-gray-900 transition-colors group-hover:text-primary sm:text-xl">
-            {category.name}
-          </h3>
+      {/* Content area */}
+      <div className="flex flex-grow flex-col p-5">
+        <p className="line-clamp-2 flex-grow text-sm leading-6 text-gray-500">
+          {category.description || "Explore our beautiful flower collections curated especially for you."}
+        </p>
 
-          <p className="line-clamp-2 text-sm leading-6 text-gray-500">
-            {category.description || "Explore our beautiful flower collections curated especially for you."}
-          </p>
-        </div>
-
-        <div className="mt-5 flex items-center justify-between border-t border-gray-100 pt-4">
+        <div className="mt-4 flex items-center justify-between border-t border-gray-100 pt-4">
           <span className="flex items-center gap-2 text-sm font-semibold text-secondary transition-all duration-300 group-hover:gap-3">
             Discover
             <FaRegArrowAltCircleRight className="text-base transition-transform duration-300 group-hover:translate-x-0.5" />

@@ -23,6 +23,9 @@ import ShowFlower from "../component/dashboard/ShowFlower";
 import ShopByCategory from "../component/shop/ShopByCategory";
 import Users from "../pages/Users";
 import ContactList from "../component/dashboard/ContactList";
+import Order from "../component/dashboard/Order";
+import AllLowStockProducts from "../component/admin_dashboard/AllLowStockProducts";
+import AllReviews from "../component/admin_dashboard/AllReviews";
 
 const AppRoutes = () => {
     return (
@@ -59,6 +62,9 @@ const AppRoutes = () => {
                     <Route path="flowers" element={<ShowFlower/>}/>
                     <Route path="users" element={<Users/>}/>
                     <Route path="contact" element={<ContactList/>}/>
+                    <Route path="all-order" element={<Order/>}/>
+                    <Route path="all-low-stock-product" element={<AllLowStockProducts/>}/>
+                    <Route path="all-reviews" element={<AllReviews/>}/>
                 </Route>
 
             </Routes>

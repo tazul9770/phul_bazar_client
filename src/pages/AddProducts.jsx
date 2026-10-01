@@ -1,8 +1,31 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { FiUploadCloud, FiCheck, FiImage } from "react-icons/fi";
 import apiClient from "../services/api-client";
 import authApiClient from "../services/auth_apiClient";
 import { useNavigate } from "react-router";
+
+const inputClass =
+  "w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm shadow-sm transition focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-100";
+
+const StepDot = ({ active, done, label }) => (
+  <div className="flex items-center gap-2">
+    <span
+      className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold ${
+        done
+          ? "bg-pink-600 text-white"
+          : active
+          ? "bg-pink-100 text-pink-600 ring-2 ring-pink-300"
+          : "bg-gray-100 text-gray-400"
+      }`}
+    >
+      {done ? <FiCheck size={14} /> : label}
+    </span>
+    <span className={`text-sm font-medium ${active || done ? "text-gray-800" : "text-gray-400"}`}>
+      {label === "1" ? "Details" : "Images"}
+    </span>
+  </div>
+);
 
 const AddProducts = () => {
   const {
@@ -68,7 +91,7 @@ const AddProducts = () => {
       alert("Images uploaded successfully!");
       setPreviewImg([]);
       setImages([]);
-      navigate("/shop")
+      navigate("/shop");
     } catch (error) {
       console.error(error);
       alert("Image upload failed.");
@@ -78,124 +101,144 @@ const AddProducts = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-4 sm:p-6 md:p-8 bg-white shadow-xl rounded-2xl mt-6">
-      <h2 className="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-6">
-        🌸 Add New Flower
-      </h2>
+    <div className="mx-auto mt-6 max-w-2xl rounded-2xl border border-gray-100 bg-white p-5 shadow-sm sm:p-8">
+      <div className="mb-6 text-center">
+        <h2 className="text-2xl font-bold text-gray-900 sm:text-3xl">🌸 Add New Flower</h2>
+        <p className="mt-1 text-sm text-gray-400">List a new product in your shop</p>
+      </div>
+
+      {/* Step indicator */}
+      <div className="mb-8 flex items-center justify-center gap-4">
+        <StepDot active={!productId} done={!!productId} label="1" />
+        <div className="h-px w-10 bg-gray-200" />
+        <StepDot active={!!productId} done={false} label="2" />
+      </div>
 
       {!productId ? (
         <form onSubmit={handleSubmit(handleProductAdd)} className="space-y-5">
           {/* Name */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Flower Name</label>
+            <label className="mb-1.5 block text-sm font-medium text-gray-700">Flower Name</label>
             <input
               {...register("name", { required: true })}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={inputClass}
               placeholder="Rose, Tulip, etc."
             />
-            {errors.name && <p className="text-red-500 text-xs mt-1">This field is required</p>}
+            {errors.name && <p className="mt-1 text-xs font-medium text-red-500">This field is required</p>}
           </div>
 
           {/* Description */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <label className="mb-1.5 block text-sm font-medium text-gray-700">Description</label>
             <textarea
               {...register("description", { required: true })}
-              className="w-full px-4 py-2 border rounded-lg resize-none h-24 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={`${inputClass} h-24 resize-none`}
               placeholder="Enter product description"
             />
-            {errors.description && <p className="text-red-500 text-xs mt-1">This field is required</p>}
+            {errors.description && (
+              <p className="mt-1 text-xs font-medium text-red-500">This field is required</p>
+            )}
           </div>
 
           {/* Price & Stock */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Price (BDT)</label>
+              <label className="mb-1.5 block text-sm font-medium text-gray-700">Price (BDT)</label>
               <input
                 type="text"
                 {...register("price", {
                   required: "This field is required",
-                  validate: (value) =>
-                    !isNaN(parseFloat(value)) || "Enter a valid number",
+                  validate: (value) => !isNaN(parseFloat(value)) || "Enter a valid number",
                 })}
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className={inputClass}
+                placeholder="e.g. 450"
               />
-              {errors.price && (
-                <p className="text-red-500 text-xs mt-1">{errors.price.message}</p>
-              )}
+              {errors.price && <p className="mt-1 text-xs font-medium text-red-500">{errors.price.message}</p>}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Stock Quantity</label>
+              <label className="mb-1.5 block text-sm font-medium text-gray-700">Stock Quantity</label>
               <input
                 type="number"
                 {...register("stock", { required: true })}
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className={inputClass}
                 placeholder="e.g. 20"
               />
-              {errors.stock && (
-                <p className="text-red-500 text-xs mt-1">This field is required</p>
-              )}
+              {errors.stock && <p className="mt-1 text-xs font-medium text-red-500">This field is required</p>}
             </div>
           </div>
 
           {/* Category */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
-            <select
-              {...register("category", { required: true })}
-              className="w-full px-4 py-2 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
+            <label className="mb-1.5 block text-sm font-medium text-gray-700">Category</label>
+            <select {...register("category", { required: true })} className={`${inputClass} bg-white`}>
               <option value="">Select a category</option>
               {categories.map((cat) => (
-                <option key={cat.id} value={cat.id}>{cat.name}</option>
+                <option key={cat.id} value={cat.id}>
+                  {cat.name}
+                </option>
               ))}
             </select>
-            {errors.category && (
-              <p className="text-red-500 text-xs mt-1">This field is required</p>
-            )}
+            {errors.category && <p className="mt-1 text-xs font-medium text-red-500">This field is required</p>}
           </div>
 
           {/* Submit */}
           <button
             type="submit"
-            className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200 cursor-pointer"
+            className="w-full rounded-xl bg-pink-600 py-3 text-sm font-semibold text-white shadow-md shadow-pink-600/20 transition hover:bg-pink-700"
           >
-            ➕ Add Product
+            Add Product
           </button>
         </form>
       ) : (
-        <div className="mt-6">
-          <h3 className="text-lg font-semibold mb-3 text-gray-700">Upload Product Images</h3>
-          <input
-            type="file"
-            multiple
-            accept="image/*"
-            className="w-full file-input file-input-bordered"
-            onChange={handleImgChange}
-          />
+        <div>
+          <h3 className="mb-1 text-lg font-semibold text-gray-800">Upload product images</h3>
+          <p className="mb-4 text-sm text-gray-400">Add a few clear photos so customers know exactly what they're getting.</p>
 
-          {previewImg.length > 0 && (
-            <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 mt-4">
+          <label
+            htmlFor="product-images"
+            className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-pink-200 bg-pink-50/40 px-4 py-8 text-center transition hover:border-pink-300 hover:bg-pink-50"
+          >
+            <FiUploadCloud className="text-2xl text-pink-400" />
+            <span className="text-sm font-medium text-gray-700">Click to select images</span>
+            <span className="text-xs text-gray-400">PNG, JPG up to a few MB each</span>
+            <input
+              id="product-images"
+              type="file"
+              multiple
+              accept="image/*"
+              className="hidden"
+              onChange={handleImgChange}
+            />
+          </label>
+
+          {previewImg.length > 0 ? (
+            <div className="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-4">
               {previewImg.map((src, idx) => (
                 <img
                   key={idx}
                   src={src}
                   alt="Preview"
-                  className="w-full h-20 object-cover rounded-lg border"
+                  className="h-20 w-full rounded-lg border border-gray-100 object-cover"
                 />
               ))}
+            </div>
+          ) : (
+            <div className="mt-4 flex items-center justify-center gap-2 text-xs text-gray-400">
+              <FiImage /> No images selected yet
             </div>
           )}
 
           <button
             onClick={handleImgUpload}
-            className={`mt-4 w-full py-3 text-white font-semibold rounded-lg transition duration-200 ${
-              loading ? "bg-gray-400 cursor-not-allowed" : "bg-green-600 hover:bg-green-700"
-            }`}
             disabled={loading}
+            className={`mt-5 flex w-full items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold text-white shadow-md transition ${
+              loading
+                ? "cursor-not-allowed bg-gray-300 shadow-none"
+                : "bg-green-600 shadow-green-600/20 hover:bg-green-700"
+            }`}
           >
-            {loading ? "Uploading Images..." : "✅ Upload Images"}
+            {loading ? "Uploading images..." : "Upload Images"}
           </button>
         </div>
       )}
