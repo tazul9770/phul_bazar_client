@@ -40,10 +40,8 @@ const Register = () => {
       }
     } catch (error) {
       console.error("Registration error:", error);
-      setLoading(false); // re-enable on failure so user can retry
+      setLoading(false); 
     }
-    // NOTE: on success we intentionally keep `loading` true —
-    // button stays disabled until the redirect to /login happens.
   };
 
   return (

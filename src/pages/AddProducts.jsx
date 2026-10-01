@@ -44,7 +44,7 @@ const AddProducts = () => {
 
   // Fetch categories
   useEffect(() => {
-    apiClient.get("/category/").then((res) => setCategories(res.data));
+    apiClient.get("/category/").then((res) => setCategories(res.data.results));
   }, []);
 
   // Add product

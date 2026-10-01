@@ -21,7 +21,7 @@ const ReviewSection = () => {
     setIsLoading(true);
     try {
       const response = await apiClient.get(`/flowers/${productId}/reviews/`);
-      setReviews(response.data);
+      setReviews(response.data.results);
     } catch (error) {
       console.log(error);
     } finally {

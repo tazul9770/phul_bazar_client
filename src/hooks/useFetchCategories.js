@@ -10,7 +10,7 @@ const useFetchCategories = () => {
       setLoading(true);
       try {
         const response = await apiClient.get('/category/');
-        setCategories(response.data);
+        setCategories(response.data.results);
       } catch (error) {
         console.error("Failed to fetch categories:", error);
       } finally {
